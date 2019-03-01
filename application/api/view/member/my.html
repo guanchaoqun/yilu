@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>我的</title>
+    <script src="/home/js/one.js"></script>
+    <link rel="stylesheet" type="text/css" href="/home/css/style.css">
+    <link rel="stylesheet" href="/home/css/my.css">
+</head>
+<body>
+<div id="box">
+    <div class="myTop" v-for="(item,index) in myData" v-cloak>
+        <div class="touxiang" @click="location.href = 'xiugai?id='+item.m_id">
+            <img :src="item.headimgurl" alt="">
+        </div>
+        <div class="level">
+            LV.{{item.level}}
+        </div>
+        <p>{{item.nickname}}</p>
+    </div>
+    <ul class="myState">
+        <li v-for="(item,index) in myData">
+            <!--<a @click="location.href = 'bidding1.html?name=inList&m_id=1'">-->
+            <a @click="location.href = 'bidding?name=inList&m_id=1'">
+                <img src="/home/img/myState1.png" alt="">
+                <p>参拍中</p>
+            </a>
+        </li>
+        <li v-for="(item,index) in myData">
+            <!--<a @click="location.href = 'bidding1.html?name=yesList&m_id=2'">-->
+            <a @click="location.href = 'bidding?name=yesList&m_id=2'">
+                <img src="/home/img/myState2.png" alt="">
+                <p>已获拍</p>
+            </a>
+        </li>
+        <li v-for="(item,index) in myData">
+            <!--<a @click="location.href = 'bidding1.html?name=noList&m_id=3'">-->
+            <a @click="location.href = 'bidding?name=noList&m_id=3'">
+                <img src="/home/img/myState3.png" alt="">
+                <p>未获拍</p>
+            </a>
+        </li>
+    </ul>
+    <ul class="myOrder">
+        <h3>我的订单</h3>
+        <li v-for="(item,index) in myData">
+            <a @click="location.href = 'order?o_id='+item.id+'&order=1'">
+                <img src="/home/img/myOrder1.png" alt="">
+                <p>待付款</p>
+            </a> 
+        </li>
+        <li v-for="(item,index) in myData">
+            <a @click="location.href = 'order?o_id='+item.id+'&order=2'">
+                <img src="/home/img/myOrder5.png" alt="">
+                <p>待发货</p>
+            </a>
+        </li>
+        <li v-for="(item,index) in myData">
+            <a @click="location.href = 'order?o_id='+item.m_id+'&order=3'">
+                <img src="/home/img/myOrder3.png" alt="">
+                <p>待收货</p>
+            </a>
+        </li>
+        <li v-for="(item,index) in myData">
+            <a @click="location.href = 'order?o_id='+item.m_id+'&order=4'">
+                <img src="/home/img/myOrder2.png" alt="">
+                <p>已违约</p>
+            </a>
+        </li>
+    </ul>
+    <div class="meBot">
+        <div>
+            <a @click="location.href = 'focusMaster'">
+                <img src="/home/img/guanzhu.png" alt="">
+                <p>关注大师</p>
+            </a>
+        </div>
+        <div>
+            <a @click="deleteAddress = true">
+                <img src="/home/img/myOrder4.png" alt="">
+                <p>售后</p>
+            </a>
+        </div>
+    </div>
+    <div class="alertText" v-show="deleteAddress">
+        <div class="alertTextCont">
+            <p>客服电话</p>
+            <textarea  id="text" readonly>13793535462</textarea>
+            <div>
+                <i @click="deleteAddress = false">取消</i>
+                <i class="phone"><a href="tel:13793535462">拨打电话</a></i>
+            </div>
+        </div>
+    </div>
+</div>
+<ul class="footer">
+    <li><a href="index"><img src="/home/img/footerIndex.png" alt=""><span>首页</span></a></li>
+    <li class="dangqian"><a href="my"><img src="/home/img/me.png" alt=""><span>我的</span></a></li>
+</ul>
+<script src="/home/js/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    function copyText(obj) {
+        var Url2=document.getElementById("text");
+        Url2.select(); // 选择对象
+        document.execCommand("Copy"); // 执行浏览器复制命令
+    }
+    var vm = new Vue({
+        el:"#box",
+        data:{
+            deleteAddress:false,
+            myData:'',
+        },
+        methods:{
+            mydata:function(){
+                var _this = this;
+                axios.get("/api/member/memberInfo").then(function(res){
+                    _this.myData = res.data.data;
+                    console.log(res)
+                }).catch(function(){
+                    console.log('没有')
+                })
+            }
+        },
+        mounted:function(){
+            this.mydata();
+        }
+    })
+</script>
+</body>
+</html>

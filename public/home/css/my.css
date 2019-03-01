@@ -1,0 +1,203 @@
+.myTop{
+    width: 100%;
+    height: 389px;
+    background:-webkit-linear-gradient(#000,#ccc);
+    padding-top:80px;
+}
+.touxiang{
+    width: 170px;
+    height: 170px;
+    background-color: #ffffff;
+    box-shadow: 0px 1px 3px 0px
+    rgba(0, 0, 0, 0.25);
+    border-radius:50%;
+    overflow: hidden;
+    margin: 0 auto 0;
+    text-align: center;
+    border:8px solid rgba(0,0,0,.2);
+}
+.touxiang img{
+    width:100%;
+    height:100%;
+}
+.level{
+    width: 71px;
+    height: 33px;
+    background-color: #f8b72b;
+    border-radius: 3px;
+    text-align: center;
+    line-height: 33px;
+    color:white;
+    font-size: 24px;
+    margin-left: 413px;
+    margin-top: -50px;
+    position: relative;
+}
+.myTop p{
+    text-align: center;
+    font-size: 32px;
+    line-height: 32px;
+    color:white;
+    margin-top:35px;
+    font-weight: bold;
+}
+.myState{
+    width: 710px;
+    height: 170px;
+    background-color: #ffffff;
+    box-shadow: 0px 8px 24px 2px
+    rgba(196, 196, 196, 0.35);
+    border-radius: 20px;
+    margin:-100px auto 0;
+}
+.myState li{
+    float: left;
+    width: 33.3%;
+    text-align: center;
+}
+.myState li img{
+    margin-top:30px;
+}
+.myState li p{
+    font-size: 24px;
+    color:#333;
+    margin-top:16px;
+    line-height: 24px;
+}
+.myOrder{
+    overflow: hidden;
+    margin-top:30px;
+    padding:0 20px;
+}
+.myOrder h3{
+    line-height: 30px;
+    font-size: 30px;
+    color:#333;
+}
+.myOrder li{
+    width: 25%;
+    float: left;
+    text-align: center;
+    margin-top:35px;
+}
+.myOrder li p{
+    font-size: 24px;
+    color:#666;
+    line-height: 24px;
+    padding-top:15px;
+}
+.meBot{
+    padding:0 20px;
+    border-top:#f5f5f5 17px solid;
+    margin-top:35px;
+}
+.meBot div{
+    width: 25%;
+    text-align: center;
+    float: left;
+}
+.meBot div img{
+    margin-top:40px;
+}
+.meBot div p{
+    font-size: 24px;
+    color:#333;
+    padding-top:15px;
+}
+
+/*关注大师*/
+.bodyBack{
+    background:#f5f5f5;
+}
+.focus li{
+    overflow: hidden;
+    padding:0 20px;
+    height: 110px;
+    margin-bottom:10px;
+    background: white;
+    line-height: 110px;
+    color:#333;
+    font-size: 28px;
+}
+.focus li img.left{
+    margin-top:25px;
+    width: 54px;
+    height: 54px;
+}
+.focus li .right{
+    padding-top:43px;
+}
+.focus li span{
+    margin-left:20px;
+}
+
+.alertText{
+    position: fixed;
+    top:0;
+    left:0;
+    right: 0;
+    bottom:0;
+    background: rgba(0,0,0,.4);
+}
+.alertTextCont{
+    width: 540px;
+    height: 322px;
+    background-color: #ffffff;
+    border-radius: 20px;
+    position: absolute;
+    top:50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    text-align: center;
+    overflow: hidden;
+}
+.alertTextCont p{
+    font-size: 32px;
+    line-height: 32px;
+    margin-top:29px;
+    margin-bottom:64px;
+}
+.alertTextCont textarea{
+    font-size: 30px;
+    text-align: center;
+    color:#333;
+    display: block;
+    width: 330px;
+    line-height: 1.8;
+    margin:0 auto;
+    border:none;
+}
+.alertTextCont div{
+    width: 100%;
+    height: 100px;
+    border-top:1px solid #f0f0f0;
+    font-size: 34px;
+    color:#333;
+    position: absolute;
+    bottom:0;
+}
+.alertTextCont div i{
+    display: inline-block;
+    width: 260px;
+    height: 100px;
+    line-height: 100px;
+    border-right:1px solid #f0f0f0;
+}
+.alertTextCont div i:nth-child(2){
+    border-right:none;
+}
+.phone a{
+    color:#000;
+}
+
+
+
+
+
+
+
+
+
+
+
+

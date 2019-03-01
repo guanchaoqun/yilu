@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>我的</title>
+    <script src="/home/js/one.js"></script>
+    <link rel="stylesheet" type="text/css" href="/home/css/style.css">
+    <link rel="stylesheet" href="/home/css/my.css">
+</head>
+<body class="bodyBack">
+<div class="focus">
+    <ul>
+        <li v-for="(item,index) in followList" >
+            <a @click="location.href = 'focusStore?id='+item.id">
+                <img :src="item.shopimage" class="left" alt="">
+                <span class="left">{{item.shopname}}</span>
+                <img src="/home/img/rightJian.png" class="right" alt="">
+            </a>
+        </li>
+    </ul>
+</div>
+<script src="/home/js/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    new Vue({
+        el:'.focus',
+        data:{
+            followList:'',
+        },
+        methods:{
+            follow:function(){
+                var _this=this;
+                axios.get("/api/follow/followlist").then(function(res){
+                    _this.followList = res.data.data;
+                    // console.log(res);
+                }).catch(function(){
+                    console.log('没有')
+                })
+            }
+        },
+        mounted:function(){
+            this.follow();
+        }
+    })
+</script>
+</body>
+</html>

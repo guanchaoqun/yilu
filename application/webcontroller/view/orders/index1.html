@@ -1,0 +1,91 @@
+<!--继承模板-->
+{extend name="base" /}
+<!--主体内容-->
+{block name='content'}
+<section class="content-header">
+    <h1>订单列表</h1>
+    <ol class="breadcrumb">
+        <li class="active"><i class="fa fa-dashboard"></i>订单列表</li>
+    </ol>
+</section>
+<div class="layui-content-box">
+    <div class="box">
+        <div class="box-header layui-row">
+            <div class="layui-col-xs12 layui-col-sm6 layui-col-md6">
+                <div class="input-group">
+                    <!--<button class="layui-btn layui-btn-sm layui-btn-normal monitor-action" data-action="create">-->
+                        <!--<i class="layui-icon">&#xe654;</i>新增-->
+                    <!--</button>-->
+                    <!--<button class="layui-btn layui-btn-sm layui-btn-danger monitor-action" data-action="deleteAll">-->
+                    <!--<i class="layui-icon">&#xe640;</i>批量删除-->
+                    <!--</button>-->
+                </div>
+            </div>
+            <div class="layui-input-inline layui-form">
+                <div class="layui-inline">
+                    <input class="layui-input" name="order_sn" id="order_sn" placeholder="输入订单编号">
+                </div>
+            </div>
+            <div class="layui-input-inline layui-form">
+                <div class="layui-inline">
+                    <input class="layui-input" name="nickname" id="nickname" placeholder="输入会员名称 或手机号">
+                </div>
+            </div>
+            <div class="layui-input-inline layui-form">
+                <select name="status" id="status">
+                    <!--1-待付款 2&#45;&#45;待发货 3&#45;&#45;待收货 4&#45;&#45;已完成 5&#45;&#45;违约-->
+                    <option value="">请选择订单状态</option>
+                    <option value="1">待付款</option>
+                    <option value="2">待发货</option>
+                    <option value="3">待收货</option>
+                    <option value="4">已完成</option>
+                    <option value="5">违约</option>
+                </select>
+            </div>
+            <button class="layui-btn" data-type="reload">搜索</button>
+        </div>
+        <div class="box-body">
+            <table id="lists-table" lay-filter="lists"></table>
+            <script type="text/html" id="tb-status">
+                <i class='fa {{# if(d.status==1){ }}fa-check-circle text-green{{# }else{ }}fa-times-circle text-red{{# } }}' lay-event="status"></i>
+            </script>
+            <!--操作-->
+            <script type="text/html" id="tb-action">
+                <a class="layui-btn  layui-btn-xs" lay-event="edit">详情</a>
+            </script>
+        </div>
+    </div>
+</div>
+{include file="public/javascript_index"/}
+<script type="text/javascript">
+    layui.use(['table','layer','jquery'], function(){
+        var $=table = layui.table;
+        //搜索
+        //搜索
+        var $ = layui.$, active = {
+            reload: function(){
+                var nickname = $('#nickname');
+                var order_sn = $('#order_sn');
+                var status = $('#status');
+                //执行重载
+                table.reload('lists-table', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                        key: {
+                            nickname: nickname.val(),
+                            order_sn: order_sn.val(),
+                            status: status.val(),
+                        }
+                    }
+                });
+            }
+        };
+        $('.box-header .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+{/block}

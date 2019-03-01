@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui">
+		<meta charset="utf-8" />
+		<script type="text/javascript" src="js/one.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/daifukuan.css"/>
+		<title>订单详情</title>
+	</head>
+	<body>
+		<div class="box">
+			<div v-for="(item,index) in daiFukuan">
+				<div class="header">
+					<div class="header-1">
+						<p class="header-p1">等待买家付款</p>
+						<p class="header-p2">剩余 <span id="timer"></span>自动关闭订单</p>
+					</div>
+					<div class="weizhi">
+						<div class="weizhi-xq">
+							<p class="xm">
+								<span>{{item.name}}</span>
+								<span>{{item.phone}}</span>
+							</p>
+							<p class="dz">
+								{{item.adress}}
+							</p>
+						</div>
+					</div>
+				</div>
+				<div class="second">
+					<div class="second-1" @click="location.href = 'focusStore.html?id='+item.s_id">
+						<p>{{item.shop}}</p>
+					</div>
+					<div class="second-2" @click="location.href = 'ongoing.html?id='+item.g_id">
+						<div class="second-3">
+							<div class="second-2-left">
+								<img :src="item.cover_plan"/>
+							</div>
+							<div class="second-2-right">
+								<p class="second-p1">{{item.goods_name}}</p>
+								<p class="second-p2">竞拍价：<span>￥{{item.end_price}}</span></p>
+								<p class="second-p3">保证金：￥{{item.bond}}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="three">
+					<div class="three-1">
+						<p class="three-p1">成交价格<span>￥{{item.end_price}} </span></p>
+						<p class="three-p2">保证金额（已返还）<span>-￥{{item.bond}} </span></p>
+						<p class="three-p3">运费<span>￥{{item.postage}} </span></p>
+						<p class="three-p4">实付金额<span>￥{{item.end_price+item.postage}} </span></p>
+					</div>
+				</div>
+				<div class="four">
+					<div class="four-1">
+						<p>订单编号<span>{{item.order_sn}}</span></p>
+						<p>成交时间<span>{{item.deal_time}}</span></p>
+					</div>
+				</div>
+				<div class="five">
+					<div @click="location.href='http://www.yiluzongheng.com/api/goodspay/index?id='+item.id">付款</div><div>朋友代付</div>
+				</div>
+			</div>
+
+		</div>
+		<script src="js/vue.js"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script>
+					var leftTime = 86400 ;
+					var t = setInterval(function(){
+                        leftTime--;
+						if(leftTime==0){
+							clearInterval(t);
+						}else{
+                        var days = parseInt(leftTime / 1000 / 60 / 60 / 24 , 10); //计算剩余的天数
+                        var hours = parseInt(leftTime / 60 / 60 % 24 , 10); //计算剩余的小时
+                        var minutes = parseInt(leftTime / 60 % 60, 10);//计算剩余的分钟
+                        var seconds = parseInt(leftTime  % 60, 10);//计算剩余的秒数
+                        days = checkTime(days);
+                        hours = checkTime(hours);
+                        minutes = checkTime(minutes);
+                        seconds = checkTime(seconds);
+                        // console.log(leftTime)
+                        document.getElementById("timer").innerHTML = hours+"小时" + minutes+"分"+seconds+"秒";
+						// console.log(hours)
+						}
+					},1000);
+
+                // setInterval("leftTimer(2016,11,11,11,11,11)",1000);
+            function checkTime(i){ //将0-9的数字前面加上0，例1变为01
+                if(i<10)
+                {
+                    i = "0" + i;
+                }
+                return i;
+            }
+
+            new Vue({
+                el:'.box',
+                data:{
+					daiFukuan:'',
+					ti:''
+                },
+                methods:{
+                    daifukuan:function(){
+                        var _this=this;
+                        var newsID=window.location.search;
+                        axios.get("/api/orders/daiFukuan"+newsID).then(function(res){
+                            _this.daiFukuan = res.data.data;
+                            var time = (_this.daiFukuan[0].logistics_time) * 1000;
+                            console.log(time)
+                            var date = new Date(time);
+                            console.log(date)
+                            Y = date.getFullYear() + '-';
+                            M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                            D = date.getDate() + ' ';
+                            h = date.getHours() + ':';
+                            m = date.getMinutes() + ':';
+                            s = date.getSeconds();
+                            _this.ti=Y+M+D+h+m+s;
+                            consoleo.log(Y+M+D+h+m+s)
+                        }).catch(function(){
+                            console.log('没有')
+                        })
+                    },
+                    payment:function(itemId){
+                        var _this=this;
+                        axios.get("/api/goodspay/index?id=12").then(function(res){
+                           console.log(res)
+                            console.log(itemId)
+                        }).catch(function(){
+                            console.log('没有')
+							console.log(itemId)
+                        })
+					}
+                },
+                mounted:function(){
+                    this.daifukuan();
+                }
+            })
+		</script>
+	</body>
+</html>
+

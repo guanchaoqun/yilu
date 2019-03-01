@@ -1,0 +1,87 @@
+<!--继承模板-->
+{extend name="base" /}
+<!--主体内容-->
+{block name='content'}
+<section class="content-header">
+    <h1>归属者列表</h1>
+    <ol class="breadcrumb">
+        <li class="active"><i class="fa fa-dashboard"></i>归属者列表</li>
+    </ol>
+</section>
+<div class="layui-content-box">
+    <div class="box">
+        <div class="box-header layui-row">
+            <div class="layui-col-xs12 layui-col-sm6 layui-col-md6">
+                <div class="input-group">
+                    <button class="layui-btn layui-btn-sm layui-btn-normal monitor-action" data-action="create">
+                        <i class="layui-icon">&#xe654;</i>新增
+                    </button>
+                    <!--<button class="layui-btn layui-btn-sm layui-btn-danger monitor-action" data-action="deleteAll">-->
+                    <!--<i class="layui-icon">&#xe640;</i>批量删除-->
+                    <!--</button>-->
+                </div>
+            </div>
+            <!--<div class="layui-col-xs12 layui-col-sm6 layui-col-md6">-->
+                <!--&lt;!&ndash;<div class="input-group">&ndash;&gt;-->
+                <!--&lt;!&ndash;<input type="text" class="form-control" placeholder="请输入关键词">&ndash;&gt;-->
+                <!--&lt;!&ndash;<span class="input-group-btn">&ndash;&gt;-->
+                <!--&lt;!&ndash;<button class="btn btn-default" type="button">搜索</button>&ndash;&gt;-->
+                <!--&lt;!&ndash;</span>&ndash;&gt;-->
+                <!--&lt;!&ndash;</div>&ndash;&gt;-->
+            <!--</div>-->
+            <div class="demoTable" style="float:right;">
+                <div class="layui-inline">
+                    <input class="layui-input" name="nickname" id="empno" autocomplete="off"  required lay-verify="number" placeholder="输入大师称 或手机号">
+                </div>
+                <button class="layui-btn" data-type="reload">搜索</button>
+            </div>
+        </div>
+        <div class="box-body">
+            <span style="font-size: 25px;margin-left: 40px;">归属者总量 : {$artist}</span>
+            <table id="lists-table" lay-filter="lists"></table>
+            <!--头像 -->
+            <script type="text/html" id="tb-image">
+                <img style="height: 40px;" src="{{d.headimgurl}}" alt="">
+            </script>
+
+            <script type="text/html" id="tb-status">
+                <i class='fa {{# if(d.status==1){ }}fa-check-circle text-green{{# }else{ }}fa-times-circle text-red{{# } }}' lay-event="status"></i>
+            </script>
+            <!--操作-->
+            <script type="text/html" id="tb-action">
+                <a class="layui-btn layui-btn-normal  layui-btn-xs" lay-event="edit">编辑</a>
+                <a class="layui-btn layui-btn-normal  layui-btn-xs" lay-event="read">详情</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            </script>
+        </div>
+    </div>
+</div>
+{include file="public/javascript_index"/}
+<script type="text/javascript">
+    layui.use(['table','layer','jquery'], function(){
+        var $=table = layui.table;
+        //搜索
+        var $ = layui.$, active = {
+            reload: function(){
+                var nickname = $('#empno');
+
+                //执行重载
+                table.reload('lists-table', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                        key: {
+                            nickname: nickname.val(),
+                        }
+                    }
+                });
+            }
+        };
+        $('.box-header .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+{/block}

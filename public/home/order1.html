@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>我的订单</title>
+    <script src="js/one.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/order.css">
+    <style>
+        h3 span{
+            font-size: 35px;
+            line-height: 50px;
+            margin-top:15px;
+        }
+        
+
+    </style>
+</head>
+<body class="bodyBack">
+<ul class="myOrderNav">
+    <li class="orderChecked"><span>全部</span></li>
+    <li><span>待付款</span></li>
+    <li><span>已违约</span></li>
+    <li><span>待收货</span></li>
+    <li><span>已完成</span></li>
+</ul>
+<div class="myOrder">
+    <!--全部-->
+    <ul class="myOrderList">
+        <li @click="tiaozhuan(item)" class="myOrderListShop" v-for="(item,index) in ordersList" v-cloak>
+            <a>
+                <h3 @click="location.href = 'focusStore.html?id='+item.s_id" v-cloak>
+                    <span class="left">{{item.shop}}</span>
+                    <img class="left" src="img/rightJian.png" alt="">
+                    <i class="right" v-if="item.status==1">等待买家付款</i>
+                    <i class="right" v-if="item.status==2">等待卖家发货</i>
+                    <i class="right" v-if="item.status==3">等待买家收货</i>
+                    <i class="right" v-if="item.status==4">交易成功</i>
+                    <i class="right" v-if="item.status==5">已违约</i>
+                </h3>
+                <div class="orderShop" v-cloak>
+                    <p class="left"><img :src="item.cover_plan" alt=""></p>
+                    <div class="left">
+                        <h3>{{item.art_id}}  <span>{{item.goods_name}}</span></h3>
+                        <p>竞拍价 <i>￥{{item.end_price}}</i></p>
+                        <span>保证金： ￥{{item.bond}}</span>
+                    </div>
+                </div>
+                <div class="orderPayment"  v-if="item.status==1">
+                    <div class="orderManey" v-cloak>
+                        合计：￥{{item.end_price+item.postage}}元（含{{item.postage}}元运费）
+                    </div>
+                    <div class="payment">
+                        <button>朋友代付</button>
+                        <button>付款</button>
+                    </div>
+                </div>
+                <div class="orderPayment"  v-if="item.status==3">
+                    <div class="orderManey" v-cloak>
+                        合计：￥{{item.end_price+item.postage}}元（含{{item.postage}}元运费）
+                    </div>
+                    <div class="payment">
+                        <!--<button>朋友代付</button>-->
+                        <button>确认收货</button>
+                    </div>
+                </div>
+            </a>
+        </li>
+    </ul>
+    <!--代付款-->
+    <ul class="myOrderList" v-cloak>
+        <div class="myOrderListShop" v-for="(item,index) in ordersList" v-cloak v-if="item.status==1">
+            <a @click="location.href = 'http://www.yiluzongheng.com/api/goodspay/index?id='+item.id">
+                <h3 @click="location.href = 'focusStore.html?id='+item.s_id">
+                    <span class="left">{{item.shop}}</span>
+                    <img class="left" src="img/rightJian.png" alt="">
+                    <i class="right">等待买家付款</i>
+                </h3>
+                <div class="orderShop">
+                    <p class="left"><img :src="item.cover_plan" alt=""></p>
+                    <div class="left">
+                        <h3><span>{{item.goods_name}}</span></h3>
+                        <p>竞拍价 <i>￥{{item.end_price}}</i></p>
+                        <span>保证金： ￥{{item.bond}}</span>
+                    </div>
+                </div>
+                <div class="orderPayment">
+                    <div class="orderManey">
+                        合计：￥{{item.end_price+item.postage}}元（含{{item.postage}}元运费）
+                    </div>
+                    <div class="payment">
+                        <button>朋友代付</button>
+                        <button @click = "">付款</button>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <!--<div class="noRecord" v-show="everData.have">无记录<br><button class="but" @click="location.href = 'index.html'">去拍卖看看</button></div>-->
+    </ul>
+    <!--已违约-->
+    <ul class="myOrderList" v-cloak>
+        <li class="myOrderListShop" v-for="(item,index) in ordersList" v-cloak v-if="item.status==5">
+            <a @click="location.href = 'weiyue.html?o_id='+item.id">
+                <h3 @click="location.href = 'focusStore.html?id='+item.s_id">
+                    <span class="left">{{item.shop}}</span>
+                    <img class="left" src="img/rightJian.png" alt="">
+                    <i class="right">已违约</i>
+                </h3>
+                <div class="orderShop">
+                    <p class="left"><img :src="item.cover_plan" alt=""></p>
+                    <div class="left">
+                        <h3><span>{{item.goods_name}}</span></h3>
+                        <p>竞拍价 <i>￥{{item.end_price}}</i></p>
+                        <span>保证金： ￥{{item.bond}}</span>
+                    </div>
+                </div>
+                <div class="orderPayment">
+                    <div class="orderManey">
+                        合计：￥{{item.end_price+item.postage}}元（含{{item.postage}}元运费）
+                    </div>
+                </div>
+            </a>
+        </li>
+        <!--<div class="noRecord" v-show="everData.have">无记录<br><button class="but" @click="location.href = 'index.html'">去拍卖看看</button></div>-->
+    </ul>
+    <!--待收货-->
+    <ul class="myOrderList" v-cloak>
+        <li class="myOrderListShop" v-for="(item,index) in ordersList" v-cloak v-if="item.status==3">
+            <a @click="location.href = 'daishouhuo.html?o_id='+item.id">
+                <h3 @click="location.href = 'focusStore.html?id='+item.s_id">
+                    <span class="left">{{item.shop}}</span>
+                    <img class="left" src="img/rightJian.png" alt="">
+                    <i class="right">等着买家收货</i>
+                </h3>
+                <div class="orderShop">
+                    <p class="left"><img :src="item.cover_plan" alt=""></p>
+                    <div class="left">
+                        <h3><span>{{item.goods_name}}</span></h3>
+                        <p>竞拍价 <i>￥{{item.end_price}}</i></p>
+                        <span>保证金： ￥{{item.bond}}</span>
+                    </div>
+                </div>
+                <div class="orderPayment">
+                    <div class="orderManey">
+                        合计：￥{{item.end_price+item.postage}}元（含{{item.postage}}元运费）
+                    </div>
+                    <div class="payment">
+                        <!--<button>朋友代付</button>-->
+                        <button @click = "shouhuo(item)">确认收货</button>
+                    </div>
+                </div>
+            </a>
+        </li>
+        <!--<div class="noRecord" v-show="everData.have">无记录<br><button class="but" @click="location.href = 'index.html'">去拍卖看看</button></div>-->
+    </ul>
+    <!--已完成-->
+    <ul class="myOrderList" v-cloak>
+        <li class="myOrderListShop" v-for="(item,index) in ordersList" v-if="item.status==4">
+            <a @click="location.href = 'orderDetails.html?o_id='+item.id">
+                <h3 @click="location.href = 'focusStore.html?id='+item.s_id">
+                    <span class="left">{{item.shop}}</span>
+                    <img class="left" src="img/rightJian.png" alt="">
+                    <i class="right">交易成功</i>
+                </h3>
+                <div class="orderShop">
+                    <p class="left"><img :src="item.cover_plan" alt=""></p>
+                    <div class="left">
+                        <h3><span>{{item.goods_name}}</span></h3>
+                        <p>竞拍价 <i>￥{{item.end_price}}</i></p>
+                        <span>保证金： ￥{{item.bond}}</span>
+                    </div>
+                </div>
+                <div class="orderPayment">
+                    <div class="orderManey">
+                        合计：￥{{item.end_price+item.postage}}元（含{{item.postage}}元运费）
+                    </div>
+                </div>
+            </a>
+        </li>
+        <!--<div class="noRecord" v-show="everData.have">无记录<br><button class="but" @click="location.href = 'index.html'">去拍卖看看</button></div>-->
+    </ul>
+</div>
+<script src="js/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script>
+    var path = window.location.href;
+    function GetQueryString(name) {
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if(r!=null)return unescape(r[2]);
+        return null;
+    }
+    console.log(GetQueryString("order"))
+    $().ready(function(){
+        if(GetQueryString("order")){
+            $(".myOrderNav li").eq(GetQueryString("order")).addClass('orderChecked').siblings().removeClass("orderChecked");
+            // var _index = $(this).index();
+            console.log(GetQueryString("order"));
+            $(".myOrder>ul").eq(GetQueryString("order")).show().siblings().hide();
+        }
+        $(".myOrderNav li").click(function(){
+            var _index = $(this).index();
+            $(".myOrder>ul").eq(_index).show().siblings().hide();
+            $(this).addClass("orderChecked").siblings().removeClass("orderChecked");
+        });
+    });
+    var vm = new Vue({
+        el:".myOrder",
+        data:{
+            everData:{
+                have:true,
+                noHave:true,
+            },
+            ordersList:'',
+            daifuList:'',
+            weiyueList:'',
+            daishouList:'',
+            wanchengList:'',
+        },
+        methods: {
+            //全部
+            orders: function () {
+                var _this = this;
+                axios.get("/api/orders/ordersList?m_id=11&status=''").then(function (res) {
+                    _this.ordersList = res.data.data;
+                    console.log(res)
+                }).catch(function () {
+                    console.log('没有')
+                })
+            },
+            shouhuo:function(item){
+                axios.post("/api/orders/shouHuo",{
+                    id:item.id
+                }).then(function(){
+                   console.log(item.id)
+                }).cache(function(){
+                    console.log('cuo')
+                })
+            },
+            tiaozhuan:function (item) {
+                    console.log(item)
+                if (item.status ==1) {
+                    location.href = 'http://www.yiluzongheng.com/api/goodspay/index?id='+item.id
+                }else if (item.status ==2) {
+                    location.href = 'daifahuo.html?o_id='+item.id
+                } else if (item.status ==3) {
+                    location.href = 'daishouhuo.html?o_id='+item.id
+                }else if (item.status ==4) {
+                    location.href = 'orderDetails.html?o_id='+item.id
+                }else if (item.status ==5) {
+                    location.href = 'weiyue.html?o_id='+item.id
+                }
+            }
+            },
+        mounted:function(){
+            this.orders();
+
+        }
+
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!--继承模板-->
+{extend name="base" /}
+<!--主体内容-->
+{block name='content'}
+<section class="content-header">
+    <h1>拍品列表</h1>
+    <ol class="breadcrumb">
+        <li class="active"><i class="fa fa-dashboard"></i>已结束</li>
+    </ol>
+</section>
+<div class="layui-content-box">
+    <div class="box">
+        <div class="box-header layui-row">
+            <div class="layui-col-xs12 layui-col-sm6 layui-col-md6">
+                <div class="input-group">
+                    <!--<button class="layui-btn layui-btn-sm layui-btn-normal monitor-action" data-action="create">-->
+                        <!--<i class="layui-icon">&#xe654;</i>新增-->
+                    <!--</button>-->
+                    <!--<button class="layui-btn layui-btn-sm layui-btn-danger monitor-action" data-action="deleteAll">-->
+                    <!--<i class="layui-icon">&#xe640;</i>批量删除-->
+                    <!--</button>-->
+                </div>
+            </div>
+            <!--<div class="layui-col-xs12 layui-col-sm6 layui-col-md6">-->
+            <!--&lt;!&ndash;<div class="input-group">&ndash;&gt;-->
+            <!--&lt;!&ndash;<input type="text" class="form-control" placeholder="请输入关键词">&ndash;&gt;-->
+            <!--&lt;!&ndash;<span class="input-group-btn">&ndash;&gt;-->
+            <!--&lt;!&ndash;<button class="btn btn-default" type="button">搜索</button>&ndash;&gt;-->
+            <!--&lt;!&ndash;</span>&ndash;&gt;-->
+            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+            <!--</div>-->
+        </div>
+        <div class="box-body">
+            <table id="lists-table" lay-filter="lists"></table>
+            <script type="text/html" id="tb-decoration">
+                {{# if (d.decoration=="") { }}
+                <p>无</p>
+                {{# } }}
+                {{# if (d.decoration) { }}
+                <p>{{d.decoration}}</p>
+                {{# } }}
+
+            </script>
+            <!--状态-->
+            <script type="text/html" id="tb-status">
+                {{# if (d.status==1) { }}
+                正常
+                {{# } }}
+                {{# if (d.status==9) { }}
+                <p style="color:red;">禁用</p>
+                {{# } }}
+                {{# if (d.status==8) { }}
+                删除
+                {{# } }}
+            </script>
+            <!--封面图-->
+            <script type="text/html" id="tb-image">
+                <img style="height: 40px;" src="{{d.cover_plan}}" alt="">
+            </script>
+            <!--操作-->
+            <!--<script type="text/html" id="tb-action">-->
+                <!--<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>-->
+                <!--<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
+            <!--</script>-->
+            <!--操作-->
+            <script type="text/html" id="tb-field">
+
+            </script>
+        </div>
+        <!--<div class="box-body">-->
+            <!--<table id="lists-table" lay-filter="lists"></table>-->
+
+
+
+            <!--<script type="text/html" id="tb-status">-->
+                <!--<i class='fa {{# if(d.status==1){ }}fa-check-circle text-green{{# }else{ }}fa-times-circle text-red{{# } }}' lay-event="status"></i>-->
+            <!--</script>-->
+            <!--操作-->
+            <!--<script type="text/html" id="tb-action">-->
+                <!--<a class="layui-btn layui-btn-normal  layui-btn-xs" lay-event="edit">编辑</a>-->
+                <!--<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
+            <!--</script>-->
+        <!--</div>-->
+
+    </div>
+</div>
+{include file="public/javascript_index"/}
+<script type="text/javascript">
+    layui.use(['table','layer','jquery'], function(){
+        var $=table = layui.table;
+        //搜索
+        var $ = layui.$, active = {
+            reload: function(){
+                var nickname = $('#empno');
+
+                //执行重载
+                table.reload('lists-table', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                        key: {
+                            nickname: nickname.val(),
+                        }
+                    }
+                });
+            }
+        };
+        $('.box-header .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+
+    // 表格内操作监听 编辑、删除
+    table.on('tool(lists)', function(obj){
+        var data = obj.data;
+        if(obj.event === 'detail'){
+            show_layui(layer,'{$Think.lang.detail}',"{:url('detail')}"+"?id="+data.id);
+        } else if(obj.event === 'del'){
+            layer.confirm('真的删除吗?', function(index){
+                if(data.status==1){
+//                        layer.msg('{$Think.lang.del_is_use}',{icon:7});return false;
+                    layer.msg('启用状态数据不可删除',{icon:7});return false;
+                }
+                $.ajax({
+                    url:"{:url('delete')}"
+                    ,data:{id:data.id}
+                    ,type:'POST'
+                    ,dataType:'json'
+                    ,success:function (res) {
+                        if(res.code==200){
+                            obj.del();
+                            layer.close(index);
+                            layer.msg(res.msg, {icon: 1,time:1000});
+                        }else{
+                            layer.msg(res.msg,{icon:7});
+                        }
+                    }
+                });
+            });
+        } else if(obj.event === 'edit'){
+            show_layui(layer,'{$Think.lang.edit}',"{:url('edit')}"+"?id="+data.id);
+        } else if(obj.event === 'status'){
+            var status=data.status==1?9:1;
+            $.ajax({
+                url:"{:url('updatestate')}"
+                ,data:{id:data.id,status:status}
+                ,type:'POST'
+                ,dataType:'json'
+                ,success:function (res) {
+                    if(res.code==200){
+                        //layer.msg(res.msg, {icon: 1,time:1000});
+//                            successMsg(res.msg);
+                        obj.update({
+                            status: status
+                        });
+                    }else {
+                        layer.msg(res.msg,{icon:7});
+                    }
+                }
+            });
+        }
+    });
+    //        表格数据编辑
+    table.on('edit(lists)', function(obj){ //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+        var data={};
+        data['id']=obj.data.id;
+        data[obj.field]=obj.value;
+        $.ajax({
+            url:"{:url('edit')}"
+            ,data:data
+            ,type:'POST'
+            ,dataType:'json'
+            ,success:function (res) {
+                if(res.code==0){
+                    layer.msg(res.msg, {icon: 1,time:1000});
+                }else {
+                    table.reload('lists-table');
+                    layer.msg(res.msg,{icon:7});
+                }
+            }
+        })
+    });
+    // 新增和批量删除监听
+    $('.monitor-action').on('click',function () {
+        switch ($(this).data('action')){
+            case 'create':
+                show_layui(layer,'{$Think.lang.create}',"{:url('create')}");
+                break;
+            case 'deleteAll':
+
+                break;
+            default:
+        }
+    });
+
+    });
+    /**
+     * 新增成功提示并重载数据库
+     * @param layer
+     * @param msg
+     */
+    function successMsg(msg) {
+        layui.use(['table','layer'], function() {
+            var table = layui.table,layer=layui.layer;
+            // 成功提示
+            layer.msg(msg, {icon: 1,time:2000});
+            // 重载数据库
+            table.reload('lists-table');
+        })
+    }
+</script>
+
+
+{/block}

@@ -1,0 +1,75 @@
+<!--继承模板-->
+{extend name="base" /}
+<!--主体内容-->
+{block name='content'}
+<div class="admin-login-box">
+    <div class="admin-login-content">
+        <div class="admin-login-header">
+            <h2>拍卖-后台管理</h2>
+        </div>
+        <form class="layui-form" action="">
+            <div class="admin-login-form">
+                <div class="layui-form-item">
+                    <label class="admin-login-icon login-icon-username" for="login-username"></label>
+                    <input type="text" id="login-username" lay-verify="required" name="username"  placeholder="用户名" class="layui-input">
+                </div>
+                <div class="layui-form-item">
+                    <label class="admin-login-icon login-icon-password" for="login-password"></label>
+                    <input type="text" id="login-password" lay-verify="required" name="password" placeholder="密码" class="layui-input">
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-row">
+                        <div class="layui-col-md6">
+                            <label class="admin-login-icon login-icon-code" for="login-code"></label>
+                            <input type="text" id="login-code" autocomplete="off" name="code" placeholder="验证码" class="layui-input">
+                        </div>
+                        <div class="layui-col-md6">
+                            <div class="admin-login-code">
+                                <img src="{:captcha_src()}" alt="" height="38" class="admin-login-code-img">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <button class="layui-btn w-max" lay-submit="" lay-filter="submit">登 入</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="__PUBLIC__/lib/layui-v2.2.45/layui.js"></script>
+<script>
+    //一般直接写在一个js文件中
+    layui.use(['layer', 'form','jquery'], function(){
+        var layer=layui.layer,$=layui.jquery,form=layui.form;
+        $('.admin-login-code-img').click(function () {
+            this.src='/captcha.html?'+Math.random();
+        });
+        form.on('submit(submit)',function (data) {
+            console.log(data.field);
+            $.ajax({
+                url:"{:url('login/index')}",
+                data:data.field,
+                type:'POST',
+                dataType:'json',
+                success:function (data) {
+                    if(data.code==200){
+                        layer.load(1);
+                        setTimeout(function(){
+                            layer.closeAll('loading');
+                            window.location.href="{:url('index/index')}";
+                        }, 600);
+                    }else if(data.code==400){
+                        layer.msg(data.msg, {
+                            icon: 5,
+                            time: 1500 //2秒关闭（如果不配置，默认是3秒）
+                        });
+                    }
+                }
+            });
+            return false;
+        })
+
+    });
+</script>
+{/block}

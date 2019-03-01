@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui">
+    <meta charset="utf-8" />
+    <script type="text/javascript" src="/home/js/one.js"></script>
+    <link rel="stylesheet" type="text/css" href="/home/css/daishouhuo.css"/>
+    <title>订单详情待发货</title>
+</head>
+<body>
+<div id="box">
+    <div v-for="(item,index) in daiFahuo">
+        <div class="header">
+            <div class="header-1">
+                <p class="header-p1">等待发货</p>
+                <!--<p class="header-p2">交易成功</p>-->
+            </div>
+            <div class="weizhi">
+                <div class="weizhi-xq">
+                    <p class="xm">
+                        <span>{{item.name}}</span>
+                        <span>{{item.phone}}</span>
+                    </p>
+                    <p class="dz">
+                        {{item.adress}}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="second">
+            <div class="second-1" @click="location.href = 'focusStore?id='+item.s_id">
+                <p>{{item.shop}}</p>
+            </div>
+            <div class="second-2" @click="location.href = 'ongoing?id='+item.g_id+'&g_id='+item.g_id">
+                <div class="second-3">
+                    <div class="second-2-left">
+                        <img :src="item.cover_plan"/>
+                    </div>
+                    <div class="second-2-right">
+                        <p class="second-p1">{{item.goods_name}}</p>
+                        <p class="second-p2">竞拍价：<span>￥{{item.end_price}}</span></p>
+                        <p class="second-p3">保证金：￥{{item.bond}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="three">
+            <div class="three-1">
+                <p class="three-p1">成交价格<span>￥{{item.end_price}} </span></p>
+                <p class="three-p2">保证金额（已返还）<span>-￥{{item.bond}} </span></p>
+                <p class="three-p3">运费<span>￥{{item.postage}} </span></p>
+                <p class="three-p4">实付金额<span>￥{{item.end_price+item.postage}} </span></p>
+            </div>
+        </div>
+        <div class="four">
+            <div class="four-1">
+                <p>订单编号<span>{{item.order_sn}}</span></p>
+                <p>成交时间<span>{{item.deal_time}}</span></p>
+                <p>付款时间<span>{{ti}}</span></p>
+            </div>
+        </div>
+    </div>
+    <div class="alertText" v-show="deleteAddress">
+        <div class="alertTextCont">
+            <p>客服电话</p>
+            <textarea  id="text" readonly>13793535462</textarea>
+            <div>
+                <i @click="deleteAddress = false">取消</i>
+                <!--<i onclick="copyText()" @click="deleteAddress = false">复制</i>-->
+                <i class="phone"><a href="tel:13793535462">拨打电话</a></i>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/home/js/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    function copyText(obj) {
+        var Url2=document.getElementById("text");
+        Url2.select(); // 选择对象
+        document.execCommand("Copy"); // 执行浏览器复制命令
+    }
+    new Vue({
+        el:'#box',
+        data:{
+            deleteAddress:false,
+            daiFahuo:'',
+            ti:'',
+        },
+        methods:{
+            daishouhuo:function(){
+                var _this=this;
+                var newsID=window.location.search;
+                axios.get("/api/orders/daifahuo"+newsID).then(function(res){
+                    _this.daiFahuo = res.data.data;
+                    var time = (_this.daiFahuo[0].pay_time) * 1000;
+                    var date = new Date(time);
+                    Y = date.getFullYear() + '-';
+                    M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                    D = date.getDate() + ' ';
+                    h = date.getHours() + ':';
+                    m = date.getMinutes() + ':';
+                    s = date.getSeconds();
+                    _this.ti=Y+M+D+h+m+s;
+                }).catch(function(){
+                    console.log('没有')
+                })
+            }
+        },
+        mounted:function(){
+            this.daishouhuo();
+        }
+    })
+</script>
+</body>
+</html>
+

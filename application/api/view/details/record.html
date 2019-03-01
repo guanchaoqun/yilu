@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>出价记录</title>
+    <script src="/home/js/one.js"></script>
+    <link rel="stylesheet" href="/home/css/style.css">
+    <link rel="stylesheet" href="/home/css/ongoing.css">
+</head>
+<body>
+<div class="recordPage">
+    <ul class="recordNav">
+        <li>出价用户</li>
+        <li>状态</li>
+        <li>时间</li>
+        <li>金额</li>
+    </ul>
+    <ul class="recordList" v-show="everData.have">
+        <li v-for="(item,index) in offersList">
+            <p>{{item.nickname}}</p>
+            <p v-if="item.offerstatus>0">领先</p>
+            <p v-if="item.offerstatus<1">出局</p>
+            <p>{{item.create_time}}</p>
+            <p>￥{{item.price}}</p>
+        </li>
+    </ul>
+    <div class="noRecord" v-show="everData.noHave">暂无出价记录</div>
+</div>
+
+<script src="/home/js/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    new Vue({
+        el:'.recordPage',
+        data:{
+            everData:{
+                have:true,
+                noHave:false,
+            },
+            offersList:'',
+        },
+        methods:{
+            offers:function(){
+                var _this=this;
+                var newsID=window.location.search;
+                axios.get("/api/details/offer"+newsID).then(function(res){
+                    _this.offersList = res.data.data;
+                    console.log(res)
+                }).catch(function(){
+                    console.log('没有');
+                })
+            }
+        },
+        mounted:function(){
+            this.offers();
+        }
+    })
+</script>
+</body>
+</html>

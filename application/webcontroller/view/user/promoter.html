@@ -1,0 +1,74 @@
+<!--继承模板-->
+{extend name="base" /}
+<!--主体内容-->
+{block name='content'}
+<section class="content-header">
+    <h1>推广设置</h1>
+    <ol class="breadcrumb">
+        <li class="active"><i class="fa fa-dashboard"></i> 推广设置</li>
+    </ol>
+</section>
+<div class="layui-content-box">
+    <div class="box">
+        <div class="box-body">
+            <div class="layui-collapse" >
+                {foreach $data as $v}
+                <div class="layui-collapse" lay-filter="test">
+                    <div class="layui-colla-item">
+                        <h2 class="layui-colla-title" data-userid="{$v.id}">{$v.nickname}</h2>
+                        <div class="layui-colla-content subset{$v.id}">
+
+                        </div>
+                    </div>
+                </div>
+                {/foreach}
+            </div>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/static/admin/lib/jquery/1.9.1/jquery.min.js"></script>
+<script src="__PUBLIC__/lib/layui-v2.2.45/layui.js"></script>
+<script src="__ADMIN__/js/js.js"></script>
+<script>
+    //一般直接写在一个js文件中
+    layui.use(['element', 'layer'], function(){
+        var element = layui.element;
+        var layer = layui.layer;
+        element.on('collapse(test)', function(data){
+            //layer.msg('展开状态：'+ data.show);
+            id = $(this).data("userid");
+            if(data.show){
+                $.post("{:url('promoter')}",{'id':id},function(json){
+                    if(json.code == 200){
+                        data = json.data;
+                        if(data.length > 0){
+                            html = ''
+                            for(i=0;i<data.length;i++){
+                                html += '<div class="layui-collapse" lay-filter="test">';
+                                html += '<div class="layui-colla-item">';
+                                html += ' <h2 class="layui-colla-title" data-userid='+data[i].id+' data-usercode='+data[i].code+'>'+data[i].nickname+'</h2>';
+                                html += ' <div class="layui-colla-content subset'+data[i].id+'">';
+                                html += ' </div>';
+                                html += '</div>';
+                                html += '</div>';
+                            }
+                            $('.subset'+id).html(html);
+                            element.render('collapse', 'test');
+                            return false;
+                        }
+                        $('.subset'+id).html('没有推广下级');
+                    }
+
+
+
+                });
+
+            }
+
+        });
+
+    });
+
+</script>
+{/block}

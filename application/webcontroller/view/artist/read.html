@@ -1,0 +1,77 @@
+<!--继承模板-->
+{extend name="base" /}
+<!--主体内容-->
+{block name='content'}
+
+<div style="width:770px;margin:0 auto;background:#fafafa;border:10px #fafafa solid;color:#696969;margin-top: 10px">
+    <!--<div style="width:750px;height:50px;">-->
+    <!-- 	<div class="layui-btn-container" >
+          <button style="margin-top:8px;margin-left:105px"	class="layui-btn layui-btn-sm" data-action="create" id="go">点击发货</button>
+        </div> -->
+    <!--</div>-->
+    <div style="width:750px;height: 100px;margin-top: 10px;background: #fff;padding:5px;">
+        <div style="width:700px;height:30px; float:left;line-height:30px;padding-left:10px;">
+            详情
+        </div>
+        <div style="width:100%;float:left;height:50px;margin-top: 15px">
+            <div style="width: 700px;float:left;height:150px;">
+                <!--<div style="float: left;width:200px;margin-top:5px;margin-left: 30px">-->
+                        <!--<div style="float: left;margin-left:30px;font-size: 20px;">店铺:</div>-->
+                        <!--<div style="float: left;margin-left:15px;font-size: 18px;">{$data.shopname}</div>-->
+
+                <!--</div>-->
+                <div style="float: left;width:250px;margin-top:5px;margin-left: 30px">
+                    <div style="float: left;margin-left:30px;font-size: 20px;">归属者:</div>
+                    <div style="float: left;margin-left:15px;font-size: 18px;">{$data.artistname}</div>
+                    <div style="float: left;margin-left:15px;font-size: 18px;">{$data.shopname}</div>
+
+                </div>
+                <div style="float: left;width:200px;margin-top:5px;margin-left: 30px">
+
+                    <div style="float: left;margin-left:30px; font-size: 20px;">来源:</div>
+                    <div style="float: left;margin-left:15px; font-size: 18px;">{$data.name}</div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+        <div style="width:750px;height: 300px;margin-top: 10px;background: #fff;padding:5px;">
+            <div style="width:700px;height:30px; float:left;line-height:30px;padding-left:10px;">
+                统计
+            </div>
+            <div style="width:100%;float:left;height:50px;margin-top: 15px">
+                <div style="width: 700px;float:left;">
+                    <div style="float: left;width:100%;margin-top:5px;">
+                        <div style="float: left;margin-left: 30px">
+                            <div style="float: left;margin-left:30px;padding-bottom: 10px;font-size: 20px;">成交量</div>
+                            <div style="margin-left:30px;padding-top:5px;font-size: 18px;">{$volume}</div>
+                        </div>
+                        <div style="float: left;margin-left: 40px">
+                            <div style="float: left;margin-left:30px;padding-bottom: 10px;font-size: 20px;">成交金额(元)</div>
+                            <div style="margin-left:30px;padding-top:5px;font-size: 18px;">{$price}</div>
+                        </div>
+                        <div style="float: left;margin-left: 40px">
+                            <div style="float: left;margin-left:30px;padding-bottom: 10px;font-size: 20px;">粉丝数</div>
+                            <div style="margin-left:30px;padding-top:5px;font-size: 18px;">{$fans}</div>
+                        </div>
+                        <div style="float: left;margin-left: 40px">
+                            <div style="float: left;margin-left:30px;padding-bottom: 10px;font-size: 20px;">访问量</div>
+                            <div style="margin-left:30px;padding-top:5px;font-size: 18px;">{$views}</div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+</div>
+
+
+{include file="public/info"/}
+
+
+{/block}
+
+
+{/block}

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>修改地址</title>
+    <script src="/home/js/one.js"></script>
+    <link rel="stylesheet" href="/home/css/style.css">
+    <link rel="stylesheet" href="/home/css/delivery.css">
+</head>
+<body class="bodyBack">
+<div id="newAddress">
+    <ul class="importAddres" v-for="(item,index) in addressData">
+        <li><input type="text" placeholder="收货人" ref = 'userName'v-model="item.name"></li>
+        <li><input type="number" placeholder="手机号" ref = 'userPhone' v-model="item.phone"></li>
+        <li class="addressList" @click="chengQu">
+            <a>
+                <span>所在城区</span>
+                <img src="/home/img/rightJian.png" class="right" alt="">
+                <span class="right" id="area">{{item.area}}{{detailAdd}}</span>
+            </a>
+        </li>
+        <li><textarea name="" id="" cols="30" rows="10" placeholder="请输入详细地址，不少于5个字" ref="detailAddress">{{item.address}}</textarea></li>
+    </ul>
+    <button class="addressBut" @click="saveAddress">保存</button>
+    <div class="alertText" v-show="save">
+        <div class="alertTextCont">
+            <p>提示</p>
+            <span>是否保存地址</span>
+            <div>
+                <i @click="save = false">取消</i>
+                <i @click="saveAddress1()">保存</i>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/home/js/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    //获取地址栏参数，name:参数名称
+    function getRequest() {
+        var url = window.location.search; //获取url中"?"符后的字串
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for(var i = 0; i < strs.length; i ++) {
+                theRequest[strs[i].split("=")[0]]=decodeURI(strs[i].split("=")[1]);
+            }
+        }
+        return theRequest;
+    }
+    new Vue({
+        el:'#newAddress',
+        data:function(){
+            return {
+                save:false,
+                detailAdd:'',
+                addressData:''
+            }
+        },
+        mounted:function(){
+            if(localStorage.getItem("user")){
+                var user = JSON.parse(localStorage.getItem("user"));
+                this.$refs.userName.value = user.userName;
+                this.$refs.userPhone.value = user.userPhone;
+            }
+            if(getRequest().addressOne){
+                this.detailAdd = getRequest().addressOne + getRequest().addressShi + getRequest().addressXian;
+            }
+        },
+        methods:{
+            address:function(){
+                var _this=this;
+                var newsID=window.location.search;
+                axios.get("/api/address/address_edit"+newsID+"&id="+getRequest().id).then(function(res){
+                    _this.addressData = res.data.data;
+                    console.log(res);
+                }).catch(function(){
+                    console.log('没有')
+                })
+            },
+            saveAddress:function(){
+                console.log(getRequest().addressOne)
+                var myreg=/^[1][3,4,5,7,8][0-9]{9}$/;
+                if(this.$refs.userName.value == ''){
+                    alert("请输入用户名");
+                    return false
+                }else if(this.$refs.userPhone.value == ''){
+                    alert("请输入手机号");
+                    return false
+                }else if(this.$refs.detailAddress.value == ''){
+                    alert("请输入详细地址");
+                    return false
+                }else{
+                    var area=document.getElementById("area").innerText;
+                    console.log(area)
+                    axios.post('/api/address/address_update',{
+                        name:this.$refs.userName[0].value,
+                        phone:this.$refs.userPhone[0].value,
+                        area:area,
+                        address:this.$refs.detailAddress[0].value,
+                        id : getRequest().id
+                    }).then(function (res) {
+                        localStorage.clear();
+                        location.replace('addressManag')
+                        // window.history.go(-5);
+                    })
+                }
+            },
+            chengQu:function(){
+                localStorage.setItem("user",JSON.stringify({
+                    userName:this.$refs.userName.value,
+                    userPhone:this.$refs.userPhone.value
+                }));
+                location.replace("addressList1?id=" + getRequest().id +'&name='+this.$refs.userName[0].value +'&phone='+this.$refs.userPhone[0].value +'&address=' +this.$refs.detailAddress[0].value);
+            }
+        },
+        mounted:function(){
+            this.address();
+        }
+    })
+</script>
+</body>
+</html>

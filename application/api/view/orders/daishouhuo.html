@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui">
+    <meta charset="utf-8" />
+    <script type="text/javascript" src="/home/js/one.js"></script>
+    <link rel="stylesheet" type="text/css" href="/home/css/daishouhuo.css"/>
+    <title>订单详情待收货</title>
+</head>
+<body>
+<div id="box">
+    <div v-for="(item,index) in daiShouhuo">
+        <div class="header">
+            <div class="header-1">
+                <p class="header-p1">已发货</p>
+                <p class="header-p2" id="sheng">还剩 <span id="timer"></span>自动确认收货</p>
+            </div>
+            <div class="kd-1">
+                <div class="kd">
+                    <p>物流公司:{{item.logistics}}</p>
+                    <p>物流单号:<textarea readonly id="text">{{item.logistics_number}}</textarea>  <span @click="copyText" >复制</span></p>
+                </div>
+            </div>
+            <div class="weizhi">
+                <div class="weizhi-xq">
+                    <p class="xm">
+                        <span>{{item.name}}</span>
+                        <span>{{item.phone}}</span>
+                    </p>
+                    <p class="dz">
+                        {{item.adress}}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="second">
+            <div class="second-1" @click="location.href = 'focusStore?id='+item.s_id">
+                <p>{{item.shopname}}</p>
+            </div>
+            <div class="second-2" @click="location.href = 'ongoing?id='+item.g_id+'&g_id='+item.g_id">
+                <div class="second-3">
+                    <div class="second-2-left">
+                        <img :src="item.cover_plan"/>
+                    </div>
+                    <div class="second-2-right">
+                        <p class="second-p1">{{item.goods_name}}</p>
+                        <p class="second-p2">竞拍价：<span>￥{{item.end_price}}</span></p>
+                        <p class="second-p3">保证金：￥{{item.bond}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="second-4" @click="deleteAddress = true">
+                <span>售后</span>
+            </div>
+        </div>
+        <div class="three">
+            <div class="three-1">
+                <p class="three-p1">成交价格<span>￥{{item.end_price}} </span></p>
+                <p class="three-p2">保证金额（已返还）<span>-￥{{item.bond}} </span></p>
+                <p class="three-p3">运费<span>￥{{item.postage}} </span></p>
+                <p class="three-p4">实付金额<span>￥{{item.end_price+item.postage}} </span></p>
+            </div>
+        </div>
+        <div class="four">
+            <div class="four-1">
+                <p>订单编号<span>{{item.order_sn}}</span></p>
+                <p>成交时间<span>{{item.deal_time}}</span></p>
+                <p>付款时间<span>{{item.deal_time}}</span></p>
+                <p>发货时间<span>{{ti}}</span></p>
+            </div>
+        </div>
+        <div class="five">
+            <div @click = "shouhuo(item)">确认收货</div>
+        </div>
+    </div>
+    <div class="alertText" v-show="deleteAddress">
+        <div class="alertTextCont">
+            <p>客服电话</p>
+            <textarea  id="text" readonly>13793535462</textarea>
+            <div>
+                <i @click="deleteAddress = false">取消</i>
+                <!--<i onclick="copyText()" @click="deleteAddress = false">复制</i>-->
+                <i class="phone"><a href="tel:13793535462">拨打电话</a></i>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/home/js/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    // 倒计时
+
+    function copyText(obj) {
+        var Url2=document.getElementById("text");
+        Url2.select(); // 选择对象
+        document.execCommand("Copy"); // 执行浏览器复制命令
+    }
+    new Vue({
+        el:'#box',
+        data:{
+            deleteAddress:false,
+            daiShouhuo:'',
+            ti:''
+        },
+        methods:{
+            daishouhuo:function(){
+                var _this=this;
+                var newsID=window.location.search;
+                axios.get("/api/orders/daiShouhuo"+newsID).then(function(res){
+                    _this.daiShouhuo = res.data.data;
+                    var time = (_this.daiShouhuo[0].logistics_time) * 1000;
+                    console.log(time)
+                    var date = new Date(time);
+                    console.log(date)
+                    Y = date.getFullYear() + '-';
+                    M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                    D = date.getDate() + ' ';
+                    h = date.getHours() + ':';
+                    m = date.getMinutes() + ':';
+                    s = date.getSeconds();
+                    _this.ti=Y+M+D+h+m+s;
+                    console.log(Y+M+D+h+m+s)
+                    var t = setInterval(function(){
+                        var cheng=_this.daiShouhuo[0].logistics_time;
+                        var leftTime = 864000 ;
+                        var time=Math.floor((new Date()).valueOf()/1000)-cheng;
+                        var dao=leftTime-time;
+                        if(dao<0){
+                            clearInterval(t);
+                            document.getElementById("sheng").innerHTML="已自动收货"
+                        }else{
+                            var days = parseInt(dao  / 60 / 60 / 24 , 10); //计算剩余的天数
+                            var hours = parseInt(dao / 60 / 60 % 24 , 10); //计算剩余的小时
+                            var minutes = parseInt(dao / 60 % 60, 10);//计算剩余的分钟
+                            var seconds = parseInt(dao  % 60, 10);//计算剩余的秒数
+                            days = checkTime(days);
+                            hours = checkTime(hours);
+                            minutes = checkTime(minutes);
+                            seconds = checkTime(seconds);
+                            // console.log(leftTime)
+                            document.getElementById("timer").innerHTML = days + "天" + hours + "小时" + minutes+"分"+seconds+"秒";
+                            // console.log(hours)
+                        }
+                    },10);
+                    function checkTime(i){ //将0-9的数字前面加上0，例1变为01
+                        if(i<10) {
+                            i = "0" + i;
+                        }
+                        return i;
+                    }
+                }).catch(function(){
+                    console.log('没有')
+                })
+            },
+            shouhuo:function(item){
+                axios.post("/api/orders/shouHuo",{
+                    o_id:item.id
+
+                }).then(function(res){
+                    location.href = "http://www.yiluzongheng.com/home/order?order=4"
+                    // alert('收货成功')
+                    console.log(res);
+                    console.log(item.id);
+                })
+            }
+        },
+        mounted:function(){
+            this.daishouhuo();
+        }
+    })
+</script>
+</body>
+</html>
+

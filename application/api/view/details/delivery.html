@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>保证金</title>
+    <script src="/home/js/one.js"></script>
+    <link rel="stylesheet" href="/home/css/style.css">
+    <link rel="stylesheet" href="/home/css/delivery.css">
+</head>
+<body class="bodyBack">
+<div class="delivery">
+    <div class="deliveryTop" v-for="(item,index) in addressList">
+        <h3><span>保证金</span><i class="right"><b>￥</b>{{item.bond}}</i></h3>
+        <div class="explain">
+            <p>1.若拍卖不成功，保证金将全额退回支付渠道</p>
+            <p>
+                2.若拍卖成功，请在24小时时间内完成付款，付款成功后，保证金
+                在3个工作日内退回原支付渠道，预期未付款将扣掉保证金。
+            </p>
+        </div>
+    </div>
+    <div v-for="(item,index) in addressList">
+        <a href="newAddress" v-if="item==''">添加地址 <img src="/home/img/rightJian.png" class="right" alt=""></a>
+        <div class="deliveryAddress"  @click="location.href='xiugaiAddress?id='+item.aid" v-else="!item==''">
+            <p>{{item.name}} <span>{{item.phone}}</span></p>
+            <div>
+                <img src="/home/img/adress.png" alt="" class="left">
+                <p class="left">
+                    {{item.area}}{{item.address}}
+                </p>
+                <img src="/home/img/rightJian.png" alt="" class="right">
+            </div>
+        </div>
+    </div>
+    <button @click="baoming">报名、提交保证金</button>
+
+    <!--弹框-->
+    <div class="alertText" v-show="prompt">
+        <div class="alertTextCont">
+            <p>提示</p>
+            <span>此地址将作为您拍卖成功后的收货地址</span>
+            <div v-for="(item,index) in addressList">
+                <i @click="prompt = false">取消</i>
+                <i @click="location.href='http://www.yiluzongheng.com/api/wxpay/pay?id='+item.id">确定</i>
+            </div>
+        </div>
+    </div>
+    <div class="alertText" v-show="fileOut">
+        <div class="alertTextCont">
+            <p>提示</p>
+            <span>还未填写收货地址</span>
+            <div>
+                <i @click="window.history.go(-1)">取消</i>
+                <i @click="location.href='newAddress'">去填写</i>
+            </div>
+        </div>
+    </div>
+    <div class="alertText" v-show="show">
+        <div class="alertTextCont">
+            <p>提示</p>
+            <span>请绑定手机号</span>
+            <div>
+                <i @click="window.history.go(-1)">取消</i>
+                <i @click="location.href='onPhoneNum'">去填写</i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/home/js/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    new Vue({
+        el:'.delivery',
+        data:{
+            prompt:false,
+            fileOut:false,
+            show:false,
+            whetherAddress:false,
+            addressList:''
+        },
+        methods:{
+            address:function(){
+                var _this=this;
+                var newsID=window.location.search;
+                axios.get("/api/details/signup"+newsID).then(function(res){
+                    console.log(res)
+                    // console.log(_this.addressList[0].id)
+                    var code=res.data.code;
+                    console.log(code);
+                    if(code==400){
+                        _this.fileOut=true;
+                    }else if(code==450){
+                        _this.show=true;
+                    }else if(code==200){
+                        _this.addressList = res.data.data;
+                        _this.fileOut=false;
+                    }
+                }).catch(function(){
+                    console.log('没有')
+                })
+            },
+            baoming:function () {
+                this.prompt = true
+                var _this = this;
+                axios.post("/api/details/myauction",{
+                    id:this.addressList[0].id
+                }).then(function(res){
+                    console.log(id)
+                    console.log("对")
+                    _this.baozheng = res.data.data;
+                    console.log(res.data.data.id)
+                }).catch(function(){
+                    console.log('错')
+                    console.log(res.data.data.id)
+                })
+            }
+        },
+        mounted:function(){
+            this.address();
+        }
+    })
+</script>
+</body>
+</html>

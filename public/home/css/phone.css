@@ -1,0 +1,77 @@
+*{padding:0;margin:0;}
+a{text-decoration: none}
+i{font-style: normal}
+b{font-weight: normal}
+ul,li{list-style: none;}
+.left{
+    float: left;
+}
+.right{
+    float: right;
+}
+.onPhone{
+    padding:0 20px;
+}
+.onPhone h3{
+    line-height: 107px;
+    font-size: 28px;
+    color:#333;
+    border-bottom:2px solid #e6e6e6;
+}
+.phoneNum{
+    margin-top:42px;
+}
+.phoneNum input{
+    height: 58px;
+    border: solid 1px #dcdcdc;
+    display: block;
+    outline: none;
+    margin:0 auto;
+    padding-left:30px;
+    font-size: 28px;
+}
+.phoneNum input::placeholder{
+    color:#ccc;
+    font-size: 28px;
+}
+.phoneNum>input{
+    width: 543px;
+}
+.phoneNum p{
+    overflow: hidden;
+    width: 575px;
+    margin:28px auto 0;
+}
+.but1{
+    width: 295px;
+}
+.but{
+    width: 230px;
+    height: 59px;
+    background: #e62727;
+    border:none;
+    color:white;
+    font-size: 28px;
+    outline: none;
+}
+.onPhone>button{
+    width: 500px;
+    height: 70px;
+    border:none;
+    outline: none;
+    display: block;
+    margin:75px auto 0;
+    background: #e62727;
+    color:white;
+    font-size: 28px;
+    border-radius:5px;
+}
+
+/*更换手机号*/
+.onPhone>p{
+    font-size: 24px;
+    color:#333;
+    padding:37px 0 50px;
+    margin-left:30px;
+}
+

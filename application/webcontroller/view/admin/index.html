@@ -1,0 +1,191 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="Bookmark" href="/favicon.ico" >
+    <link rel="Shortcut Icon" href="/favicon.ico" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="/static/admin/lib/html5shiv.zepto"></script>
+    <script type="text/javascript" src="/static/admin/lib/respond.min.zepto"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="/static/admin/static/h-ui/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/admin/static/h-ui.admin/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="/static/admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="/static/admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="/static/admin/static/h-ui.admin/css/style.css" />
+    <!--[if IE 6]>
+    <script type="text/javascript" src="/static/admin/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>管理员管理</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 管理员管理 <span class="c-gray en">&gt;</span> 管理员列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+    <div class="cl pd-5 bg-1 bk-gray">
+        <span class="l">
+            <a class="btn btn-primary radius" onclick="layer_show('添加管理员','{:url(\'admin/add\')}')" href="javascript:;">
+                <i class="Hui-iconfont">&#xe600;</i> 添加管理员</a>
+        </span>
+    </div>
+    <div class="mt-20">
+        <table class="table table-border table-bordered table-bg table-hover table-sort">
+            <thead>
+            <tr class="text-c">
+                <th width="40">ID</th>
+                <th width="">用户名</th>
+                <th width="">昵称</th>
+                <th width="">手机号</th>
+                <th width="">邮箱</th>
+                <th width="50">状态</th>
+                <th width="300">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {foreach name="data" item='v'}
+            <tr class="text-c">
+                <td>{$v.admin_id}</td>
+                <td class="">
+                    <span>{$v.username}</span>
+                </td>
+                <td class="">
+                    <span>{$v.nick_name}</span>
+                </td>
+                <td class="">
+                    <span>{$v.link_phone}</span>
+                </td>
+                <td class="">
+                    <span>{$v.email}</span>
+                </td>
+                <td class="td-status">
+                    {eq name="$v.status" value="1"}
+                    <span class="label label-success radius">已启用</span>
+                    {else/}
+                    <span class="label label-danger radius">已禁用</span>
+                    {/eq}
+                </td>
+                <td class="td-manage">
+                    {eq name="$v.status" value="1"}
+                    <a style="text-decoration:none" class="btn btn-warning radius" onClick="admin_status(this,{$v.admin_id})" href="javascript:;" title="禁用">禁用</a>
+                    {else/}
+                    <a style="text-decoration:none" class="btn btn-primary radius" onClick="admin_status(this,{$v.admin_id})" href="javascript:;" title="启用">启用</a>
+                    {/eq}
+                    <!--<a style="text-decoration:none" class="btn btn-primary radius" onClick="set_auth({$v.admin_id},'','')" href="javascript:;" title="授权角色">授权角色</a>-->
+                    <a style="text-decoration:none" class="btn btn-primary radius" onClick="password_reset('',{$v.admin_id})" href="javascript:;" title="重置密码">重置密码</a>
+                    <a style="text-decoration:none" class="btn btn-danger radius" onClick="series_del(this,{$v.admin_id})" href="javascript:;" title="删除">删除</a>
+                </td>
+            </tr>
+            {/foreach}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="/static/admin/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="/static/admin/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="/static/admin/static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="/static/admin/static/h-ui.admin/js/H-ui.admin.js"></script>
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="/static/admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="/static/admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="/static/admin/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+    $('.table-sort').dataTable({
+//        "aaSorting": [[ 0, "desc" ]],//默认第几个排序
+        "bStateSave": true,//状态保存
+        "aoColumnDefs": [
+//            {"bVisible": false, "aTargets": [ 1 ]} //控制列的隐藏显示
+            {"orderable":false,"aTargets":[1,2,3]}// 制定列不参与排序
+        ]
+    });
+
+    /*系列-编辑*/
+    function set_auth(id,w,h){
+        layer_show('授权角色','/webcontroller/admin/setauth/id/'+id+'.html',w,h);
+    }
+    /*系列-删除*/
+    function series_del(obj,id){
+        layer.confirm("确认要删除吗？",function(index){
+            $.ajax({
+                type: 'POST',
+                url: "{:url('admin/delete')}",
+                dataType: 'json',
+                data:{'admin_id':id},
+                success: function(data){
+                    if(data.code==200){
+                        $(obj).parents("tr").remove();
+                        layer.msg('删除成功!',{icon:1,time:1000});
+                    }else if(data.code==400){
+                        layer.msg(data.message,{icon:2,time:1000});
+                    }else{
+                        layer.msg('删除失败!',{icon:7,time:1000});
+                    }
+                }
+            });
+        });
+    }
+    /*密码重置*/
+    function password_reset(obj,id){
+        layer.confirm('是否重置密码为123456',function(index) {
+            $.ajax({
+                type: 'POST',
+                url: "{:url('admin/passwordReset')}",
+                dataType: 'json',
+                data: {'admin_id':id},
+                success: function (data) {
+                    if (data.code==200) {
+                        layer.msg(data.msg, {icon: 1, time: 1000});
+                    } else {
+                        layer.msg(data.msg, {icon: 7, time: 1000});
+                    }
+                }
+            });
+        })
+    }
+
+    /*状态编辑*/
+    function admin_status(obj,id){
+        var val=$(obj).html();
+        var status=(val=='启用')?1:0;
+        var q1=val=='启用'?'确认启用该账户？':'确认禁用该账户？';
+//        alert(val+access+q1);
+        layer.confirm(q1,function(index) {
+            $.ajax({
+                type: 'POST',
+                url: "{:url('admin/adminstatus')}",
+                dataType: 'json',
+                data: {admin_id: id,status: status},
+                success: function (data) {
+                    if (data.code==200) {
+                        if (status == 1) {
+                            var a1 = '<span class="label label-success radius">已启用</span>';
+                            var a2 = '<a style="text-decoration:none" class="btn btn-warning radius" onClick="admin_status(this,{$v.admin_id})" href="javascript:;" title="禁用">禁用</a>';
+                        } else {
+                            var a1 = '<span class="label label-danger radius">已禁用</span>';
+                            var a2 = '<a style="text-decoration:none" class="btn btn-primary radius" onClick="admin_status(this,{$v.admin_id})" href="javascript:;" title="启用">启用</a>';
+                        }
+                        $(obj).parents("tr").find(".td-manage").prepend(a2);
+                        $(obj).parents("tr").find(".td-status").html(a1);
+                        $(obj).remove();
+                        layer.msg(data.msg, {icon: 1, time: 1000});
+                    } else {
+                        layer.msg(data.msg, {icon: 7, time: 1000});
+                    }
+                }
+            });
+        })
+    }
+
+
+
+
+</script>
+</body>
+</html>

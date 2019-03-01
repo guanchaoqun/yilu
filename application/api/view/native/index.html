@@ -1,0 +1,118 @@
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui">
+    <meta charset="utf-8" />
+    <script type="text/javascript" src="/home/js/one.js"></script>
+    <title>朋友代付</title>
+    <style>
+        .shopping p{
+            font-size: 30px;
+        }
+        .money{
+            font-size: 34px;
+            font-weight: bold;
+        }
+        .image img{
+            display: block;
+            margin: 0 auto;
+            width: 380px;
+        }
+        .image p{
+            text-align: center;
+            font-size: 40px;
+        }
+        .shuoming h2{
+            font-size: 34px;
+        }
+        .shuoming P{
+            font-size: 30px;
+        }
+        .money p{
+            font-size: 50px;
+            color: #e62727;
+            text-align: center;
+            font-weight: bold; 
+        }
+    </style>
+</head>
+<body>
+    <div class="shopping" >
+        <p>我挑好了商品,是时候该你仗义疏财啦,快帮我支付!!!</p>
+        <div class="money" v-for="(item,index) in daiFukuan">
+            代付金额:
+            <p>￥ {:number_format($data['total_fee'],2)}</p>
+
+        </div>
+        <div class="image">
+            <img alt="模式二扫码支付" src="http://www.yiluzongheng.com/{$url}">
+            <p>请扫码支付</p>
+        </div>
+        <div class="shuoming">
+            <h2>说明:</h2>
+            <p>付款前务必和好友再次确认,避免是诈骗行为</p>
+        </div>
+    </div>
+    <script src="/home/js/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="" src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+
+    <script>
+        function copyText(obj) {
+            var Url2=document.getElementById("text");
+            Url2.select(); // 选择对象
+            document.execCommand("Copy"); // 执行浏览器复制命令
+        }
+        new Vue({
+            el:'#box',
+            data:{
+                deleteAddress:false,
+                daiFukuan:'',
+            },
+            methods:{
+                daishouhuo:function(){
+                    var _this=this;
+                    var newsID=window.location.search;
+                    axios.get("/api/orders/daiFukuan"+newsID).then(function(res){
+                        _this.daiFukuan = res.data.data;
+                        console.log(_this.daiFukuan);
+                    }).catch(function(){
+                        console.log('没有')
+                    })
+                }
+            },
+            mounted:function(){
+                this.daishouhuo();
+            }
+        })
+
+        //设置配置文件
+        wx.config({
+            debug: false,       //调试模式是否开启，开启则在PC端控制台console里面打印，在手机端就是弹出状态吗
+            appId: "{$wxdata['appId']}",
+            timestamp: "{$wxdata['timestamp']}",
+            nonceStr: "{$wxdata['nonceStr']}",
+            signature: "{$wxdata['signature']}",
+            jsApiList: [
+                'onMenuShareTimeline',       //分享到朋友圈
+                'onMenuShareAppMessage',    //分享给朋友
+                'onMenuShareQQ',           //分享给QQ好友
+                'onMenuShareQZone'        //分享到QQ空间
+            ]
+        });
+        //调用接口
+        wx.ready(function(){
+            //掉用分享给朋友的接口，这里只做分享给朋友，分享到其他地方一次内推
+            wx.onMenuShareAppMessage({
+                title:"北京陆纵横文化有限公司", // 分享标题
+                desc: "请朋友帮忙付款", // 分享描述
+                // link: window.location.href, // 分享链接，注意：该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                link: "{$wxdata['url']}", // 分享链接，注意：该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                imgUrl:"http://www.yiluzongheng.com/home/img/gzhlogo.jpg",  // 分享图标
+                success: function (res) {
+                    alert('分享成功')
+                }
+            });
+        });
+    </script>
+</body>
+</html>

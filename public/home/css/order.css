@@ -1,0 +1,152 @@
+.bodyBack{
+    background: #eee;
+}
+.myOrderNav{
+    width: 710px;
+    overflow: hidden;
+    height: 88px;
+    padding:0 20px;
+    background: white;
+    box-shadow: 1px 2px 6px 0px
+    rgba(30, 29, 29, 0.15);
+}
+.myOrderNav li{
+    float: left;
+    margin-left:43px;
+    font-size: 28px;
+    color:#333;
+    line-height: 88px;
+}
+.myOrderNav li span{
+    border-bottom: 5px solid white;
+    display: inline-block;
+    height: 80px;
+}
+.myOrderNav .orderChecked{
+    color:#e62727;
+}
+.myOrderNav .orderChecked span{
+    border-bottom: 5px solid #e62727;
+}
+.myOrderNav li:nth-child(1){
+    margin-left:0;
+}
+.myOrderList{
+    display: block;
+}
+.myOrderList:nth-child(2){
+    display: none;
+}
+.myOrderListShop{
+    margin-top:20px;
+}
+.myOrderListShop>a>h3{
+    width: 710px;
+    padding:0 20px;
+    height: 80px;
+    background: white;
+    line-height: 80px;
+    font-weight: normal;
+    font-size: 28px;
+    color:#333;
+}
+.myOrderListShop>a>h3 img{
+    margin-top:28px;
+    padding-left:30px;
+}
+.myOrderListShop>a>h3 i{
+    font-size: 22px;
+    color: #cb1414;
+}
+.orderShop{
+    overflow: hidden;
+    width: 710px;
+    padding: 16px 20px;
+    background: #fafafa;
+}
+.orderShop>p{
+    width: 248px;
+    height: 186px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.orderShop>p>img{
+    width:100%;
+    height:100%;
+}
+.orderShop div{
+    margin-left:30px;
+    width:430px;
+}
+.orderShop div h3{
+    font-size: 30px;
+    color:#333;
+    line-height: 30px;
+}
+.orderShop div p{
+    font-size: 30px;
+    color:#333;
+    margin-top:25px;
+}
+.orderShop div p i{
+    font-size: 30px;
+    color:#b81616;
+}
+.orderShop div>span{
+    font-size: 30px;
+    color:#333333;
+    display: block;
+    margin-top:15px;
+}
+.orderPayment{
+    width: 710px;
+    padding:0 20px;
+    background: white;
+}
+.orderManey{
+    text-align: right;
+    font-size: 26px;
+    color:#333;
+    line-height: 60px;
+    border-bottom:1px solid #ccc;
+}
+.payment{
+    text-align: right;
+    padding-top:30px;
+    height: 75px;
+}
+.payment button{
+    width: 132px;
+    height: 50px;
+    background: #e62727;
+    border-radius: 5px;
+    border:none;
+    color:white;
+    outline: none;
+    font-size: 22px;
+    margin-left:25px;
+}
+.noRecord{
+    font-size: 24px;
+    color:#333;
+    margin-top:400px;
+    text-align: center;
+    display:block;
+    font-size: 30px;
+}
+.but{
+    width:430px;
+    height:74px;
+    background: #777777;
+    color: #fff;
+    text-align: center;
+    line-height: 74px;
+    font-size:30px;
+    margin-top:20px;
+}
+
+
+
+

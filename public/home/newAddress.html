@@ -1,0 +1,119 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>新增地址</title>
+    <script src="js/one.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/delivery.css">
+</head>
+<body class="bodyBack">
+<div id="newAddress">
+    <ul class="importAddres">
+        <li><input type="text" placeholder="收货人" ref = 'userName'></li>
+        <li><input type="number" placeholder="手机号" ref = 'userPhone'></li>
+        <li class="addressList" @click="chengQu">
+            <a>
+                <span>所在城区</span>
+                <img src="img/rightJian.png" class="right" alt="">
+                <span class="right">{{detailAdd}}</span>
+            </a>
+        </li>
+        <li><textarea name="" id="" cols="30" rows="10" placeholder="请输入详细地址，不少于5个字" ref="detailAddress"></textarea></li>
+    </ul>
+    <button class="addressBut" @click="saveAddress">保存</button>
+    <div class="alertText" v-show="save">
+        <div class="alertTextCont">
+            <p>提示</p>
+            <span>是否保存地址</span>
+            <div>
+                <i @click="save = false">取消</i>
+                <i @click="location.href='addressManag.html'">保存</i>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    //获取地址栏参数，name:参数名称
+    function getRequest() {
+        var url = window.location.search; //获取url中"?"符后的字串
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for(var i = 0; i < strs.length; i ++) {
+                theRequest[strs[i].split("=")[0]]=decodeURI(strs[i].split("=")[1]);
+            }
+        }
+        return theRequest;
+    }
+    new Vue({
+        el:'#newAddress',
+        data:function(){
+            return {
+                save:false,
+                detailAdd:''
+            }
+        },
+        mounted:function(){
+            if(localStorage.getItem("user")){
+                console.log(1)
+                var user = JSON.parse(localStorage.getItem("user"));
+                this.$refs.userName.value = user.userName;
+                this.$refs.userPhone.value = user.userPhone;
+            }
+            if(getRequest().addressOne){
+                this.detailAdd = getRequest().addressOne + getRequest().addressShi + getRequest().addressXian;
+            }
+        },
+        methods:{
+            saveAddress:function(){
+                // this.save=true;
+                var myreg=/^[1][3,4,5,7,8][0-9]{9}$/;
+                if(this.$refs.userName.value == ''){
+                    alert("请输入用户名");
+                    return false
+                }else if(this.$refs.userPhone.value == ''){
+                    alert("请输入手机号");
+                    return false
+                }else if(!myreg.test(this.$refs.userPhone.value)){
+                    alert("请输入正确的手机号");
+                    return false
+                }else if(this.detailAdd == ''){
+                    alert("请选择所在城区");
+                    return false
+                }else if(this.$refs.detailAddress.value == ''){
+                    alert("请输入详细地址");
+                    return false
+                }else if(this.$refs.detailAddress.value.length < 5){
+                    alert("详细地址字数不能少于5个");
+                    return false
+                }else{
+                    this.save=true;
+                    axios.post('/api/address/address_add',{
+                        m_id:11,
+                        name:this.$refs.userName.value,
+                        phone:this.$refs.userPhone.value,
+                        area:getRequest().addressOne + getRequest().addressShi + getRequest().addressXian,
+                        address:this.$refs.detailAddress.value
+                    }).then(function (res) {
+                        localStorage.clear();
+                        console.log(res)
+                    })
+                }
+            },
+            chengQu:function(){
+                localStorage.setItem("user",JSON.stringify({
+                    userName:this.$refs.userName.value,
+                    userPhone:this.$refs.userPhone.value
+                }));
+                location.replace("addressList.html")
+            }
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui">
+		<meta charset="utf-8" />
+		<script type="text/javascript" src="js/one.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/focusStore.css"/>
+		<title>归属者</title>
+		<style>
+			.second-1>div>p:nth-child(2){
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="box">
+			<div class="header" v-for="(item,index) in shopsList" v-cloak>
+				<div class="header-1">
+					<div class="header-tx">
+						<img :src="item.shopimage" alt="" />
+					</div>
+					<div class='header-name'>
+						<p>{{item.shopname}} <span>{{item.name}}</span></p>
+						<p v-if="item.followstatus==1" @click="quguan">已关注</p>
+						<p v-if="item.followstatus==0" @click="guanzhu">关注</p>
+					</div>
+				</div>
+				<div class="header-2">
+					<p>成交数<span>{{item.ordersum}}</span></p>
+					<p>粉丝<span>{{item.fansum}}</span></p>
+				</div>
+			</div>
+			<div class="second">
+				<div class="second-1">
+					<div class="second-1-left" v-for="(item,index) in shopsData">
+						<img :src="item.cover_plan" alt="" @click="location.href = 'ongoing.html?id='+item.gs_id"/>
+						<p>{{item.name}}<span>{{item.goods_name}}</span></p>
+						<p>{{item.classname}}</p>
+						<p>起拍价：<span>￥{{item.maxprice}}</span></p>
+						<p>当前价：<span>￥{{item.starting_price}}</span></p>
+						<p>距离结束：<span>{{end_time[index]}}</span></p>
+					</div>
+			</div>
+		</div>
+		<script src="js/vue.js"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script>
+            function timeFn(d1) {
+                var dateBegin = new Date(d1.replace(/-/g, "/"));//将-转化为/，使用new Date
+                var dateEnd = new Date();//获取当前时间
+                var dateDiff = dateEnd.getTime() - dateBegin.getTime();//时间差的毫秒数
+                var dayDiff = Math.floor(dateDiff / (24 * 3600 * 1000));//计算出相差天数
+                var leave1=dateDiff%(24*3600*1000);    //计算天数后剩余的毫秒数
+                var hours=Math.floor(leave1/(3600*1000));//计算出小时数
+                //计算相差分钟数
+                var leave2=leave1%(3600*1000);    //计算小时数后剩余的毫秒数
+                var minutes=Math.floor(leave2/(60*1000));//计算相差分钟数
+                //计算相差秒数
+                var leave3=leave2%(60*1000);      //计算分钟数后剩余的毫秒数
+                var seconds=Math.round(leave3/1000);
+                return Math.abs(dayDiff) + '天' + Math.abs(hours) + '小时' + Math.abs(minutes) + '分';
+            }
+            new Vue({
+                el:'#box',
+                data:{
+                    shopsList:'',
+                    shopsData:'',
+                    end_time:[]
+                },
+                methods:{
+                    shop:function(){
+                        var _this=this;
+                        var newsID=window.location.search;
+                        axios.get("/api/details/shophead"+newsID).then(function(res){
+                            _this.shopsList = res.data.data;
+                            // console.log(res);
+                        }).catch(function(){
+                            console.log('没有')
+                        })
+                    },
+                    shopdata:function(){
+                        var _this=this;
+                        var newsID=window.location.search;
+                        axios.get("/api/details/shop"+newsID).then(function(res){
+                            _this.shopsData= res.data.data;
+                            setInterval(function(){
+                                _this.end_time = [];
+                                for(var i = 0;i<_this.shopsData.length;i++){
+                                    _this.end_time.push(timeFn(_this.shopsData[i].end_time));
+                                }
+                            });
+                            // console.log(res);
+                        }).catch(function(){
+                            console.log('没有')
+                        })
+                    },
+					guanzhu:function(item){
+                        var newsID=window.location.search;
+                        axios.get("/api/follow/follow"+newsID).then(function(res){
+                            console.log(newsID);
+                            parent.location.reload()
+                            // console.log(item.id);
+                        }).catch(function(){
+                            console.log('没有')
+                        })
+					},
+					quguan:function(){
+                        var newsID=window.location.search;
+                        axios.get("/api/follow/nofollow"+newsID).then(function(res){
+                            console.log(newsID);
+                            parent.location.reload()
+                            // console.log(item.id);
+                        }).catch(function(){
+                            console.log('没有')
+                        })
+					}
+                },
+                mounted:function(){
+                    this.shop();
+                    this.shopdata();
+                }
+            })
+		</script>
+	</body>
+</html>

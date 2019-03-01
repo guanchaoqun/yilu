@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>我的竞拍</title>
+    <script src="/home/js/one.js"></script>
+    <link rel="stylesheet" href="/home/css/style.css">
+    <link rel="stylesheet" href="/home/css/bidding.css">
+</head>
+<body class="bodyBack">
+<ul class="myOrderNav">
+    <li ><span>全部</span></li>
+    <li :class="path=='?name=inList'?'orderChecked':''"><span>参拍中</span></li>
+    <li :class="path=='?name=yesList'?'orderChecked':''"><span>已拍获</span></li>
+    <li :class="path=='?name=noList'?'orderChecked':''"><span>未获拍</span></li>
+</ul>
+<div class="myOrder">
+    <!--全部-->
+    <ul class="myOrderList">
+        <li class="myOrderListShop"  v-for="(item,index) in auctionList" v-cloak>
+            <a  @click="location.href = 'ongoing?id='+item.goods_id+'&g_id='+item.goods_id">
+                <h3>
+                    开拍时间：{{item.start_time}}
+                </h3>
+                <div class="orderShop">
+                    <p class="left">
+                        <img :src="item.cover_plan" alt="">
+                    </p>
+                    <div class="left">
+                        <h3><span>{{item.goods_name}}</span></h3>
+                        <p v-if="item.auctionstatus==1">竞拍价 <i>￥{{item.max_price}}</i></p>
+                        <p v-if="item.auctionstatus==0">起拍价 <i>￥{{item.starting_price}}</i></p>
+                        <p v-if="item.auctionstatus==2">起拍价 <i>￥{{item.starting_price}}</i></p>
+                    </div>
+                </div>
+            </a>
+            <div class="orderPayment">
+                <div class="orderManey">
+                    <span class="left">保证金： ￥{{item.bond}}</span>
+                    <i class="right" v-if="item.bond_status==0">未支付</i>
+                    <i class="right" v-if="item.bond_status==1">已支付</i>
+                    <i class="right" v-if="item.bond_status==2">已返还</i>
+                </div>
+                <div class="payment">
+                    <button v-if="item.auctionstatus==0">等待开始</button>
+                    <button v-if="item.auctionstatus==1" @click="location.href = 'ongoing?id='+item.goods_id+'&g_id='+item.goods_id">去出价</button>
+                    <button v-if="item.auctionstatus==2">已经结束</button>
+                    <button v-if="item.auctionstatus==3" @click="location.href ='order?order=1'">去付款</button>
+                    <button v-if="item.auctionstatus==9">流拍</button>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <!--参拍中-->
+    <ul class="myOrderList">
+        <li class="myOrderListShop" v-for="(item,index) in inList" v-cloak>
+            <!--<a   @click="location.href = 'ongoing.html?id='+item.goods_id+'&g_id='+item.goods_id">-->
+            <a   @click="location.href = 'ongoing?id='+item.goods_id+'&g_id='+item.goods_id">
+                <h3>
+                    开拍时间：{{item.start_time}}
+                </h3>
+                <div class="orderShop">
+                    <p class="left"><img :src="item.cover_plan" alt=""></p>
+                    <div class="left">
+                        <h3 style="width:400px"><span>{{item.goods_name}}</span></h3>
+                        <p v-if="item.auctionstatus==1">竞拍价 <i>￥{{item.max_price}}</i></p>
+                        <p v-if="item.auctionstatus==0">起拍价 <i>￥{{item.starting_price}}</i></p>
+                        <p v-if="item.auctionstatus==2">起拍价 <i>￥{{item.starting_price}}</i></p>
+                    </div>
+                </div>
+            </a>
+            <div class="orderPayment">
+                <div class="orderManey">
+                    <span class="left">保证金： ￥{{item.bond}}</span>
+                    <i class="right" v-if="item.bond_status==0">未支付</i>
+                    <i class="right" v-if="item.bond_status==1">已支付</i>
+                    <i class="right" v-if="item.bond_status==2">已返还</i>
+                </div>
+                <div class="payment">
+                    <button v-if="item.auctionstatus==0">等待开始</button>
+                    <button v-if="item.auctionstatus==1" @click="location.href = 'ongoing?id='+item.goods_id+'&g_id='+item.goods_id">去出价</button>
+                    <button v-if="item.auctionstatus==2">已经结束</button>
+                </div>
+            </div>
+
+        </li>
+    </ul>
+    <!--已获拍-->
+    <ul class="myOrderList">
+        <li class="myOrderListShop" v-for="(item,index) in yesList" v-cloak>
+            <!--<a  @click="location.href = 'ongoing.html?id='+item.goods_id+'&g_id='+item.goods_id">-->
+            <a  @click="location.href = 'ongoing?id='+item.goods_id+'&g_id='+item.goods_id">
+                <h3>
+                    结束时间：{{item.end_time}}
+                </h3>
+                <div class="orderShop">
+                    <p class="left"><img :src="item.cover_plan" alt=""></p>
+                    <div class="left">
+                        <h3><span>{{item.goods_name}}</span></h3>
+                        <p>竞拍价 <i>￥{{item.price}}</i></p>
+                    </div>
+                </div>
+            </a>
+            <div class="orderPayment">
+                <div class="orderManey">
+                    <span class="left">保证金： ￥{{item.bond}}</span>
+                </div>
+                <div class="payment">
+                    <button v-if="item.auctionstatus==0">等待开始</button>
+                    <button v-if="item.auctionstatus==1">等待发货</button>
+                    <button v-if="item.auctionstatus==2">已结束</button>
+                    <button v-if="item.auctionstatus==3" @click="location.href ='order?order=1'">去支付</button>
+                    <button v-if="item.auctionstatus==4">已支付</button>
+
+
+                </div>
+            </div>
+        </li>
+    </ul>
+    <!--未获拍-->
+    <ul class="myOrderList">
+        <li class="myOrderListShop" v-for="(item,index) in noList" v-cloak>
+            <!--<a  @click="location.href = 'ongoing.html?id='+item.goods_id+'&g_id='+item.goods_id">-->
+            <a  @click="location.href = 'ongoing?id='+item.goods_id+'&g_id='+item.goods_id">
+                <h3>
+                    结束时间：{{item.end_time}}
+                </h3>
+                <div class="orderShop">
+                    <p class="left"><img :src="item.cover_plan" alt=""></p>
+                    <div class="left">
+                        <h3><span>{{item.goods_name}}</span></h3>
+                    </div>
+                </div>
+            </a>
+            <div class="orderPayment">
+                <div class="orderManey">
+                    <span class="left">保证金： ￥{{item.bond}}</span>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+<script src="/home/js/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script>
+    var path = window.location.href;
+    function GetQueryString(name)
+    {
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if(r!=null)return unescape(r[2]);
+        return null;
+    }
+
+    console.log(GetQueryString("m_id"))
+    $().ready(function(){
+        if(GetQueryString("m_id")){
+            $(".myOrderNav li").eq(GetQueryString("m_id")).addClass('orderChecked').siblings().removeClass("orderChecked");
+            $(".myOrder>ul").eq(GetQueryString("m_id")).show().siblings().hide();
+        }
+        $(".myOrderNav li").click(function(){
+            var _index = $(this).index();
+            $(".myOrder>ul").eq(_index).show().siblings().hide();
+            $(this).addClass("orderChecked").siblings().removeClass("orderChecked");
+        });
+    });
+    new Vue({
+        el:'.myOrder',
+        data:{
+            deleteAddress:false,
+            auctionList:'',
+            inList:'',
+            yesList:'',
+            noList:'',
+            myData:''
+        },
+        methods:{
+            mydata:function(){
+                var _this = this;
+                axios.get("/api/member/memberInfo").then(function(res){
+                    _this.myData = res.data.data;
+                    // console.log(res)
+                }).catch(function(){
+                    console.log('没有')
+                })
+            },
+            //全部
+            auction:function(){
+                var _this=this;
+                var newsID=window.location.search;
+                // axios.get("/api/my_auction/myAuction?m_id=3").then(function(res){
+                axios.get("/api/my_auction/myAuction").then(function(res){
+                    _this.auctionList = res.data.data;
+                    console.log(res);
+                }).catch(function(){
+                    console.log('没有')
+                })
+            },
+            // 参拍中
+            inauction:function(){
+                var _this=this;
+                var newsID=window.location.search;
+                // axios.get("/api/my_auction/inAuction?m_id=3").then(function(res){
+                axios.get("/api/my_auction/inAuction").then(function(res){
+                    _this.inList = res.data.data;
+                    console.log(res);
+                }).catch(function(){
+                    console.log('没有')
+                })
+            },
+            //已拍获
+            yesauction:function(){
+                var _this=this;
+                var newsID=window.location.search;
+                // axios.get("/api/my_auction/yesAuction?m_id=3").then(function(res){
+                axios.get("/api/my_auction/yesAuction").then(function(res){
+                    _this.yesList = res.data.data;
+                    console.log(res);
+                }).catch(function(){
+                    console.log('没有')
+                })
+            },
+            // 未获拍
+            noauction:function(){
+                var _this=this;
+                var newsID=window.location.search;
+                // axios.get("/api/my_auction/noAuction?m_id=3").then(function(res){
+                axios.get("/api/my_auction/noAuction").then(function(res){
+                    _this.noList = res.data.data;
+                    // console.log(res);
+                }).catch(function(){
+                    console.log('没有')
+                })
+            }
+        },
+        mounted:function(){
+            this.auction();
+            this.inauction();
+            this.yesauction();
+            this.noauction();
+            this.mydata();
+        }
+    })
+    new Vue({
+        el:'.myOrderNav',
+        data:{},
+        computed:{
+            // 计算路径
+            respath:function(){
+                var path = location.search;
+                return path;
+            }
+        }
+    });
+    console.log(location.search);
+</script>
+</body>
+</html>

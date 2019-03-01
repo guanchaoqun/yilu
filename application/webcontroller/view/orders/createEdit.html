@@ -1,0 +1,56 @@
+<!--继承模板-->
+{extend name="base" /}
+<!--主体内容-->
+{block name='content'}
+<section class="content-header">
+    <!-- <h1>订单详情</h1> -->
+  <!--   <ol class="breadcrumb">
+        <li class="active"><i class="fa fa-dashboard"></i>新增/编辑</li>
+    </ol> -->
+</section>
+
+<div class="layui-content-box">
+    <div class="panel panel-info" style="margin-bottom: 0px; height: 250px">
+        <div class="panel-heading">发货信息</div>
+        <div class="panel-body" style="margin-top: 15px">
+         <form class="layui-form layui-form-pane" action="">
+             <input type="hidden" name="id" value="{$data.id|default=''}">     
+             <div class="layui-form-item">
+                 <label class="layui-form-label"><div class="c-red">*</div>物流公司</label>
+                 <div class="layui-input-block">
+                      <input type="text" name="logistics" value="{$data.logistics|default=''}"  lay-verify="required" placeholder="请输入物流公司名" autocomplete="off" class="layui-input">
+                     <!--<select name="logistics" value="{$data.logistics|default=''}" lay-verify="required" required placeholder="请输入物流公司名"  lay-verify="required"  autocomplete="off"> -->
+                        <!--<option></option> -->
+                        <!--<option value="1">顺丰速运</option> -->
+                        <!--<option value="2">申通快递</option> -->
+                        <!--<option value="3">圆通快递</option> -->
+                        <!--<option value="4">天天快递</option> -->
+                        <!--<option value="5">韵达快递</option> -->
+                        <!--<option value="6">中通快递</option> -->
+                        <!--<option value="7">百世汇通</option> -->
+                        <!--<option value="8">德邦物流</option> -->
+                        <!--<option value="9">EMS</option> -->
+                        <!--<option value="10">其他</option> -->
+                    <!--</select> -->
+                 </div>
+             </div>
+             <div class="layui-form-item">
+                 <label class="layui-form-label"><div class="c-red">*</div>物流单号</label>
+                 <div class="layui-input-block">
+                     <input type="text" name="logistics_number" lay-verify="required" required  placeholder="请输入物流单号" autocomplete="off" class="layui-input">
+                 </div>
+             </div>
+             <div class="layui-form-item">
+                 <div class="layui-input-submit">
+                     <button class="layui-btn layui-btn-normal" lay-submit lay-filter="form" id="fahuo">提交</button>
+                     <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                 </div>
+             </div>
+         </form>
+      </div>
+    </div>
+</div>
+
+{include file="public/javascript_add_edit"/}
+
+{/block}

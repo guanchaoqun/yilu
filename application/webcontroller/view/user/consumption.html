@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="Bookmark" href="/favicon.ico" >
+    <link rel="Shortcut Icon" href="/favicon.ico" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="/static/admin/lib/html5shiv.zepto"></script>
+    <script type="text/javascript" src="/static/admin/lib/respond.min.zepto"></script>
+    <![endif]-->
+    <link rel="stylesheet" href="__ADMIN__/bootstrap/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/admin/static/h-ui/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/admin/static/h-ui.admin/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="/static/admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="/static/admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="/static/admin/static/h-ui.admin/css/style.css" />
+    <!--[if IE 6]>
+    <script type="text/javascript" src="/static/admin/lib/DD_belatedPNG_0.0.8a-min.zepto" ></script>
+
+    <![endif]-->
+
+</head>
+<body>
+
+<div class="page-container">
+
+    <table class="table table-border table-bordered table-hover table-bg table-sort">
+        <thead>
+        <tr>
+            <th scope="col" colspan="9">消费记录</th>
+        </tr>
+        <tr class="text-c">
+            <th width="">球场</th>
+            <th width="">消费金额</th>
+            <th width="">时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach name='data' item='v' key='k'}
+            <tr class="text-c">
+                <th class="text-l">{:getName('field','name',$v.field_id)}</th>
+                <th>{$v.money}</th>
+                <th>{:date('Y-m-d H:i:s',$v.create_time)}</th>
+
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="/static/admin/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="/static/admin/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="/static/admin/static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="/static/admin/static/h-ui.admin/js/H-ui.admin.js"></script>
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="/static/admin/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+    $('.table-sort').dataTable({
+        "aaSorting": [[ 2, "dasc" ]],//默认第几个排序
+        "bStateSave": true,//状态保存
+        "aoColumnDefs": [
+            //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+            {"orderable":false,"aTargets":[0,1]}// 制定列不参与排序
+        ]
+    });
+
+</script>
+</body>
+</html>

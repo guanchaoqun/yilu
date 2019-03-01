@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>添加地址</title>
+    <script src="js/one.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/addressList.css">
+</head>
+<body>
+<div class="box">
+    <ul class="address">
+        <li v-for="(item,index) in addressShi" v-cloak><a @click="self.location.href = 'addressXian1.html?id='+item.id + '&addressName=' + item.name + '&addressOne=' + addressOne"><span>{{item.name}}</span><img src="img/rightJian.png"></a></li>
+    </ul>
+</div>
+<script src="js/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    //获取地址栏参数，name:参数名称
+    function getRequest() {
+        var url = window.location.search; //获取url中"?"符后的字串
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for(var i = 0; i < strs.length; i ++) {
+
+                theRequest[strs[i].split("=")[0]]=decodeURI(strs[i].split("=")[1]);
+
+            }
+        }
+        return theRequest;
+    }
+    new Vue({
+        el:'.box',
+        data:{
+            addressShi:'',
+            addressOne : ''
+        },
+        methods:{
+
+            addressshi:function(){
+                var _this=this;
+                var newsID=window.location.search;
+                this.addressOne = getRequest().addressOne;
+                axios.get("/api/address/shi"+newsID).then(function(res){
+                    _this.addressShi = res.data.data;
+                    console.log(res);
+                }).catch(function(){
+                    console.log('没有')
+                })
+            }
+        },
+        mounted:function(){
+            this.addressshi();
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>修改手机号</title>
+    <script src="js/one.js"></script>
+    <link rel="stylesheet" href="css/phone.css">
+    <style>
+        .phoneNum>p{
+            margin: 0;
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="onPhone">
+    <h3>更换手机号</h3>
+    <p v-for="(item,index) in viewPhone">请输入<span>{{item}}</span>收到的验证码</p>
+    <div class="phoneNum">
+        <p>
+            <input type="text" placeholder="请输入验证码" class="left"  v-model="MA" >
+            <input type="button" class="right but" @click="Ma" onclick="test_(this)" value="获取验证码">
+        </p>
+    </div>
+    <button @click="Yz">确认</button>
+</div>
+<script src="js/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    var countdown=60;
+    function test_(val){
+        if (countdown == -1) {
+            val.removeAttribute("disabled");
+            val.value="获取验证码";
+            countdown = 60;
+        }else {
+            val.setAttribute("disabled", true);
+            val.value="重新发送(" + countdown + ")";
+            countdown--;
+            setTimeout(function() {
+                test_(val)
+            },1000)
+        }
+    }
+    new Vue({
+        el:'.onPhone',
+        data:{
+            viewPhone:'',
+            MA:''
+        },
+        methods:{
+            phone:function(){
+                var _this=this;
+                var newsID=window.location.search;
+                axios.get("/api/registered/viewphone"+newsID).then(function(res){
+                    _this.viewPhone = res.data.data;
+                    console.log(_this.viewPhone.phone);
+                }).catch(function(){
+                    console.log('没有')
+                })
+            },
+            Ma:function(){
+                var _this = this;
+                console.log(_this.viewPhone.phone)
+                axios.post("/api/registered/send_dx",{
+                    phone:_this.viewPhone.phone
+                }).then(function (res) {
+                    console.log(res)
+                })
+            },
+            Yz:function () {
+                var _this = this
+                console.log(_this)
+                axios.post("/api/registered/code",{
+                    phone:_this.viewPhone.phone,
+                    yzm:_this.MA
+                }).then(function (res) {
+                    console.log(res)
+                    location.href = 'onPhoneNum.html'
+                })
+            }
+        },
+
+        mounted:function(){
+            this.phone();
+        }
+    })
+</script>
+</body>
+</html>

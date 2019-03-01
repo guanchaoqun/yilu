@@ -1,0 +1,19 @@
+<!--继承模板-->
+{extend name="base" /}
+<!--主体内容-->
+{block name='content'}
+<div class="layui-box" style="padding: 15px;">
+    后台管理系统
+
+
+
+
+</div>
+<script src="__PUBLIC__/lib/layui-v2.2.45/layui.js"></script>
+<script>
+    //一般直接写在一个js文件中
+    layui.use(['layer', 'form'], function(){
+
+    });
+</script>
+{/block}

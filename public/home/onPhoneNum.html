@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>绑定手机号</title>
+    <script src="js/one.js"></script>
+    <link rel="stylesheet" href="css/phone.css">
+</head>
+<body>
+<div class="onPhone" v-cloak>
+    <h3>绑定手机号</h3>
+    <div class="phoneNum">
+        <input id="phone" type="number" placeholder="请输入手机号" v-model="phoneVal" name="phone">
+        <p>
+            <input type="text" placeholder="请输入验证码" v-model="yanVal" class="left but1" >
+            <input type="button" class="right but" v-if="shoudao" @click="yanZheng" value="获取验证码" style="padding-left:0;text-align: center">
+            <input type="button" class="right but" v-else :value="'重新发送(' + countdown + '秒)'" style="padding-left:0;text-align: center">
+        </p>
+    </div>
+    <button @click="confirm">确认</button>
+</div>
+<script src="js/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script>
+    new Vue({
+        el:'.onPhone',
+        data:{
+            phoneVal:'',
+            yanVal:'',
+            shoudao:true,
+            countdown:60,
+            yanzhen:''
+        },
+        methods:{
+            yanZheng:function(){
+                var myreg=/^[1][3,4,5,7,8][0-9]{9}$/;
+                var _this = this;
+                if(this.phoneVal == ''){
+                    alert("请填写手机号");
+                    return false;
+                }else if(!myreg.test(this.phoneVal)){
+                    alert("请输入正确的手机号");
+                    return false
+                }else{
+                    axios.post('/api/registered/send_dx',{
+                        phone:this.phoneVal
+                    }).then(function (response) {
+                        _this.shoudao = false;
+                        var time=setInterval(function(){
+                            _this.countdown--;
+                            if(_this.countdown < 0){
+                                _this.shoudao = true;
+                                _this.countdown=60;
+                                clearInterval(time);
+                                console.log(_this.countdown)
+                            }
+                        },1000);
+                        _this.yanzhen = response.data.data;
+                        console.log(_this.yanzhen)
+                    }).catch(function (error) {
+                        console.log(error);
+                    })
+                }
+            },
+            confirm:function(){
+                console.log(this.yanVal,this.yanzhen)
+                if(this.yanVal != this.yanzhen){
+                    alert("请输入正确的验证码");
+                    return false
+                }else{
+                    axios.post('/api/registered/enrol',{
+                        phone:this.phoneVal,
+                        yzm:this.yanVal
+                    }).then(function (response) {
+                        alert("绑定成功")
+                        console.log(response)
+                        location.replace ('xiugai.html')
+                        // window.history.go(-3);
+                    }).catch(function (error) {
+                        console.log(error);
+                    })
+                }
+            }
+        },
+        mounted:function(){
+        }
+    })
+</script>
+</body>
+</html>

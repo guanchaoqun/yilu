@@ -1,0 +1,199 @@
+<!--继承模板-->
+{extend name="base" /}
+<!--主体内容-->
+{block name='content'}
+<section class="content-header">
+    <h1>节点列表</h1>
+    <ol class="breadcrumb">
+        <li class="active"><i class="fa fa-dashboard"></i> 节点列表</li>
+    </ol>
+</section>
+<div class="layui-content-box">
+    <div class="box">
+        <div class="box-header layui-row">
+            <div class="layui-col-xs12 layui-col-sm6 layui-col-md6">
+                <div class="input-group">
+                    <button class="layui-btn layui-btn-sm layui-btn-normal monitor-action" data-action="create">
+                        <i class="layui-icon">&#xe654;</i>{$Think.lang.create}
+                    </button>
+                    <button class="layui-btn layui-btn-sm layui-btn-danger monitor-action" data-action="deleteAll">
+                        <i class="layui-icon">&#xe640;</i>{$Think.lang.delete_all}
+                    </button>
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm6 layui-col-md6">
+                <!--<div class="input-group">-->
+                    <!--<input type="text" class="form-control" placeholder="请输入关键词">-->
+                    <!--<span class="input-group-btn">-->
+                        <!--<button class="btn btn-default" type="button">搜索</button>-->
+                    <!--</span>-->
+                <!--</div>-->
+            </div>
+        </div>
+        <div class="box-body">
+            <table id="lists-table" lay-filter="lists"></table>
+            <!--节点名称-->
+            <script type="text/html" id="tb-title">
+                {{# if(d.h_layer==2){ }}
+                &nbsp;&nbsp;&nbsp;&nbsp;├&nbsp;&nbsp;
+                {{# }else if(d.h_layer==3){ }}
+                &nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;├&nbsp;&nbsp;
+                {{# } }}{{d.title}}
+            </script>
+            <!--节点类型-->
+            <script type="text/html" id="tb-level">
+                {{# if(d.level==1){ }}
+                    栏目
+                {{# }else if(d.level==2){ }}
+                    模块
+                {{# }else if(d.level==3){ }}
+                    操作
+                {{# } }}
+            </script>
+            <!--状态-->
+            <script type="text/html" id="tb-status">
+                <i class='fa {{# if(d.status==1){ }}fa-check-circle text-green{{# }else{ }}fa-times-circle text-red{{# } }}' lay-event="status"></i>
+            </script>
+            <!--是否菜单-->
+            <script type="text/html" id="tb-ismenu">
+                <i class='fa {{# if(d.ismenu==1){ }}fa-check-circle text-green{{# }else{ }}fa-times-circle text-red{{# } }}' lay-event="ismenu" ></i>
+            </script>
+            <!--节点图标-->
+            <script type="text/html" id="tb-icon">
+                <i class="fa {{d.icon}}"></i>
+            </script>
+            <!--操作-->
+            <script type="text/html" id="tb-action">
+                <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            </script>
+        </div>
+    </div>
+</div>
+<script src="__ADMIN__/layui-v2.2.45/layui.js"></script>
+<script src="__ADMIN__/js/js.js"></script>
+<script>
+    //一般直接写在一个js文件中
+
+    layui.use(['table','layer','jquery'], function(){
+        var $=layui.jquery,table = layui.table,layer=layui.layer;
+        // 表格初始化
+        table.render({
+            elem: '#lists-table'
+            ,url:"{:url('auth_rule/getData')}"
+            ,cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            ,height:'full-145'
+            ,page:true
+            ,response: {
+                statusCode: 200 //成功的状态码，默认：0
+            }
+            ,cols: [[
+                {type:'numbers'}
+                ,{type: 'checkbox'}
+                ,{field:'title',templet:'#tb-title',title: '节点名称',edit: 'text', width: '20%', minWidth: 250}
+                ,{field:'name', title: '节点标识', width: '20%',edit: 'text', minWidth: 150} //minWidth：局部定义当前单元格的最小宽度，layui 2.2.1 新增
+                ,{field:'level',templet:'#tb-level',align:'center', title: '节点类型'}
+                ,{field:'status',templet:'#tb-status',align:'center', title: '状态'}
+                ,{field:'ismenu',templet:'#tb-ismenu',align:'center', title: '是否菜单'}
+                ,{field:'icon',templet:'#tb-icon',align:'center', title: '节点图标'}
+                ,{field:'sorts', title: '排序',edit: 'text'}
+                ,{fixed: 'right', width:178, align:'center', toolbar: '#tb-action',title:'{$Think.lang.action}'}
+            ]]
+        });
+        // 表格内操作监听 编辑、删除
+        table.on('tool(lists)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'detail'){
+                layer.msg('ID：'+ data.id + ' 的查看操作');
+
+            } else if(obj.event === 'del'){
+                layer.confirm('真的删除行么', function(index){
+                    obj.del();
+                    layer.close(index);
+                });
+            } else if(obj.event === 'edit'){
+                show_layui(layer,'节点编辑',"{:url('edit')}"+"?id="+data.id);
+            } else if(obj.event === 'status'){
+                var status=data.status==1?0:1;
+                $.ajax({
+                    url:"{:url('edit')}"
+                    ,data:{id:data.id,status:status}
+                    ,type:'POST'
+                    ,dataType:'json'
+                    ,success:function (res) {
+                        if(res.code==200){
+                            obj.update({
+                                status: status
+                            });
+                        }else {
+                            layer.msg(res.msg,{icon:7});
+                        }
+                    }
+                });
+            }else if(obj.event === 'ismenu'){
+                var ismenu=data.ismenu==1?0:1;
+                $.ajax({
+                    url:"{:url('edit')}"
+                    ,data:{id:data.id,ismenu:ismenu}
+                    ,type:'POST'
+                    ,dataType:'json'
+                    ,success:function (res) {
+                        if(res.code==200){
+                            obj.update({
+                                ismenu: ismenu
+                            });
+                        }else {
+                            layer.msg(res.msg,{icon:7});
+                        }
+                    }
+                });
+            }
+        });
+//        表格数据编辑
+        table.on('edit(lists)', function(obj){ //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data={};
+            data['id']=obj.data.id;
+            data[obj.field]=obj.value
+            $.ajax({
+                url:"{:url('edit')}"
+                ,data:data
+                ,type:'POST'
+                ,dataType:'json'
+                ,success:function (res) {
+                    if(res.code==200){
+
+                    }else {
+                        layer.msg(res.msg,{icon:7});
+                    }
+                }
+            })
+        });
+        // 新增和批量删除监听
+        $('.monitor-action').on('click',function () {
+            switch ($(this).data('action')){
+                case 'create':
+                    show_layui(layer,'新增节点',"{:url('create')}");
+                    break;
+                case 'deleteAll':
+
+                    break;
+                default:
+            }
+        });
+    });
+    /**
+     * 新增成功提示并重载数据库
+     * @param layer
+     * @param msg
+     */
+    function successMsg(msg) {
+        layui.use(['table','layer'], function() {
+            var table = layui.table,layer=layui.layer;
+            // 成功提示
+            layer.msg(msg, {icon: 1});
+            // 重载数据库
+            table.reload('lists-table');
+        })
+    }
+</script>
+{/block}

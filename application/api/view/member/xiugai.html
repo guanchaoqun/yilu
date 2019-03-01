@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>竞拍</title>
+    <script src="/home/js/one.js"></script>
+    <link rel="stylesheet" href="/home/css/style.css">
+    <link rel="stylesheet" href="/home/css/xiugai.css">
+    <style>
+        .ipt{
+            display: none;
+        }
+        .item_bock {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height:94px;
+            width: 300px;
+            padding:0px 24px 0px 38px;
+            border-bottom: 1px solid #f7f7f7;
+            background: #fff;
+        }
+        .head_p {
+            height:132px;
+        }
+        .head_img{
+            height: 90px;
+        }
+        .head_img img{
+            width:90px;
+            height:90px;
+            border-radius:50px
+        }
+        .setting_right{
+            display: flex;
+            height: 37px;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        .hiddenInput{
+            display: none;
+        }
+        .caption {
+            font-size: 26px;
+            height: 37px;
+        }
+
+    </style>
+</head>
+<body>
+<div id="box" v-cloak>
+    <ul v-for="(item,index) in myData">
+        <li class="touxiang" @click="showToggle"><p>头像</p><span><img :src="item.headimgurl" alt=""></span><img src="/home/img/rightJian.png" alt=""></li>
+        <li class="nicheng"><p>昵称</p><span>{{item.nickname}}</span></li>
+        <li class="nicheng"><p>会员等级</p><img src="/home/img/rightJian.png" alt=""><span>{{item.level}}</span></li>
+        <li class="nicheng"  @click='Phone'>手机号<img src="/home/img/rightJian.png" alt=""><span>{{item.phone}}</span></li>
+        <li class="nicheng" @click="location.href = 'addressManag'"><p>地址管理</p><span></span><img src="/home/img/rightJian.png" alt=""></li>
+        <!--<li style="height: 50px;width: 100%"><input type="file" id="file" name="Filedata" style="display:none;" accept="image/*" /></li>-->
+    </ul>
+    <ul class="photo" v-show="isShow">
+        <li @click.stop="uploadHeadImg">
+            从相册选择图片
+            <input type="file" accept="image/*" @change="handleFile" class="hiddenInput"/>
+        </li>
+        <li @click="isShow=false">取消</li>
+    </ul>
+    <!--<input @change="getFile" type="file" id="file" class="ipt">-->
+    <!--<input class="ipt" name="image" type="file" formmethod="post" accept="image/png,image/gif,image/jpeg" @change="getFile"/>-->
+    <!--<div class="layui-upload">-->
+    <!--<button type="button" class="layui-btn" id="test1">上传图片</button>-->
+    <!--<div class="layui-upload-list">-->
+    <!--<img class="layui-upload-img" id="demo1">-->
+    <!--<p id="demoText"></p>-->
+    <!--</div>-->
+    <!--</div>-->
+</div>
+<script src="/home/js/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/home/js/jquery.min.js" charset="utf-8"></script>
+<script>
+    var vm = new Vue({
+        el:"#box",
+        data:{
+            myData:'',
+            isShow:false,
+        },
+        methods:{
+            // 打开图片上传
+            uploadHeadImg: function () {
+                this.$el.querySelector('.hiddenInput').click()
+            },
+            // 将头像显示
+            handleFile: function (e) {
+                var that = this;
+                let $target = e.target || e.srcElement;
+                let file = $target.files[0];
+                var reader = new FileReader();
+                reader.onload = (data) => {
+                    let res = data.target.result;
+                    that.myData.headimgurl = res;
+                    axios.post('/api/wechat/uploads',{
+                        image : that.myData.headimgurl,
+                    }).then(function (red) {
+                        console.log(red)
+                        location.reload()
+                    })
+
+                };
+
+                reader.readAsDataURL(file)
+
+
+            },
+
+            Phone:function(){
+                var _this = this
+                console.log(_this.myData[0].phone)
+                if (_this.myData[0].phone !=''){
+                    location.replace ( 'modifyPhone?phone='+_this.myData[0].phone)
+                }else{
+                    location.replace ( 'onPhoneNum?phone='+_this.myData[0].phone)
+                }
+            },
+            mydata:function(){
+                var _this = this;
+                new
+                axios.get("/api/member/memberInfo").then(function(res){
+                    _this.myData = res.data.data;
+                    console.log(res.data)
+                }).catch(function(){
+                    console.log('没有')
+                })
+            },
+            showToggle:function(){
+                this.isShow = !this.isShow;
+                if(this.isShow){
+                    this.btnText = "隐藏"
+                }else{
+                    this.btnText = "显示"
+                }
+            },
+
+            images:function(){
+                this.$el.querySelector('.ipt').click()
+
+            },
+        },
+        mounted:function(){
+            this.mydata();
+        }
+    })
+</script>
+</body>
+</html>

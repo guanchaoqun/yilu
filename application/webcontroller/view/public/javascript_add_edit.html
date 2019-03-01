@@ -1,0 +1,108 @@
+<script>
+
+    //一般直接写在一个js文件中
+    layui.use(['form','layer','jquery','laydate'], function(){
+        var $=layui.jquery,form = layui.form,layer=layui.layer,laydate = layui.laydate;
+        $('.panel-body').css('min-height',$(window).height()-114+"px");
+
+        laydate.render({
+            elem: '#time1' //指定元素
+            ,type:'datetime'
+
+        });
+        laydate.render({
+            elem: '#time2' //指定元素
+            ,type:'datetime'
+        });
+        // 新增和批量删除监听
+        form.on('submit(form)', function(data){
+            $.ajax({
+                url:"{:url($Request.action)}"
+                ,data:data.field
+                ,type:'POST'
+                ,dataType:'json'
+                ,success:function (res) {
+                    console.log(res);
+                    switch (res.code){
+                        case 200:
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index);
+                            parent.successMsg(res.msg);
+                            break;
+                        case 400:
+                            layer.msg(res.msg,{icon:7});
+                            break;
+                        default:
+                    }
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+    });
+    layui.use('upload', function() {
+        var $ = layui.jquery, upload = layui.upload;
+
+        //普通图片上传
+        var uploadInst = upload.render({
+            elem: '#test1'
+            , url: '/webcontroller/common/upload/'
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
+            }
+            , done: function (res) {
+                //如果上传失败
+                if (res.code != 200) {
+                    return layer.msg('上传失败');
+                }
+                    $('#images').val(res.content);
+                //上传成功
+            }
+            , error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }
+        });
+
+
+
+        //多图片上传
+        upload.render({
+            elem: '#test2'
+            ,url: '/webcontroller/common/upload/'
+            ,multiple: true
+            ,before: function(obj){
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+
+                });
+            }
+            ,done: function(res){
+                //如果上传失败
+                if(res.code ==400){
+                    return layer.msg(res.msg);
+                }
+                //上传成功
+                if(res.code ==200){
+                    var item = '';
+                    item +="<div  class='img-conta'>";
+                    item +="<img style='height: 150px;width: 150px' src='"+ res.content +"' class='layui-upload-img'>";
+                    item +="<img src='__PUBLIC__/lib/img/close.png' class='close-img'>";
+                    item += "<input class='image' type='hidden' name='image[]' value='"+res.content+"'>";
+                    item +="</div>";
+                    $('#demo2').append(item);
+                    return layer.msg(res.msg);
+                }
+            }
+        });
+    });
+
+        var ue = UE.getEditor('editor');
+</script>

@@ -1,0 +1,60 @@
+<!--继承模板-->
+{extend name="base" /}
+<!--主体内容-->
+{block name='content'}
+<section class="content-header">
+    <h1>新增/编辑</h1>
+    <ol class="breadcrumb">
+        <li class="active"><i class="fa fa-dashboard"></i>新增/编辑</li>
+    </ol>
+</section>
+<div class="layui-content-box">
+    <div class="panel panel-info" style="margin-bottom: 0px;">
+        <div class="panel-heading">基本参数</div>
+        <div class="panel-body">
+            <form class="layui-form layui-form-pane" action="">
+                <input type="hidden" name="id" value="{$data.id|default=''}">
+                <input type="hidden" name="headimgurl" id="images" value="{$data.headimgurl|default=''}">
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><div class="c-red">*</div>姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" value="{$data.name|default=''}"  lay-verify="required" placeholder="请输入姓名" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><div class="c-red">*</div>手机号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="phone" lay-verify="required" value="{$data.phone|default=''}"  placeholder="请输入手机号" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn" id="test1">上传头像</button>
+                    <div class="layui-upload-list" style="text-align:center;">
+                        <p> 建议图片上传比例 4:3</p>
+                        <img class="layui-upload-img" id="demo1" src="{$data.headimgurl|default=''}" style="width:150px;">
+                        <p id="demoText"></p>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">是否启用</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="status" value="1" title="启用" {if condition="!empty($data.status)"}{eq name="$data.status" value="1"} checked {/eq}{else/}checked{/if}>
+                        <input type="radio" name="status" value="9" {if condition="!empty($data.status)"}{eq name="$data.status" value="9"} checked {/eq}{/if} title="禁用">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-submit">
+                        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="form">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{include file="public/javascript_add_edit"/}
+{/block}

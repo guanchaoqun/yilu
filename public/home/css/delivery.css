@@ -1,0 +1,287 @@
+.bodyBack{
+    background: #f5f5f5;
+}
+.deliveryTop{
+    padding:0 20px;
+    background: white;
+}
+.deliveryTop h3{
+    line-height: 106px;
+    font-size: 38px;
+    color:#333;
+    font-weight: normal;
+    border-bottom:2px solid #e6e6e6;
+}
+.deliveryTop h3 i{
+    font-size: 44px;
+    color:#b81616;
+}
+.deliveryTop h3 b{
+    font-size: 28px;
+}
+.explain{
+    font-size: 28px;
+    line-height: 40px;
+    color:#999;
+    padding-top:18px;
+    padding-bottom:40px;
+}
+.delivery div a{
+    display: block;
+    padding:0 20px;
+    background: white;
+    line-height: 110px;
+    font-size: 34px;
+    color:#333;
+    margin-top:20px;
+}
+.delivery div a img{
+    padding-top:38px;
+}
+.delivery button{
+    width: 500px;
+    height: 70px;
+    border-radius:5px;
+    background: #e62727;
+    color:white;
+    font-size: 30px;
+    outline: none;
+    display: block;
+    margin:100px auto 0;
+}
+.deliveryAddress{
+    margin-top:20px;
+    padding:0 20px;
+    width: 710px;
+    height: 171px;
+    background-color: #ffffff;
+}
+.deliveryAddress>p{
+    font-size: 32px;
+    color:#050505;
+    line-height: 32px;
+    padding-top:20px;
+}
+.deliveryAddress div p{
+    width: 600px;
+    overflow: hidden;
+    color:#666;
+    font-size: 28px;
+    line-height: 42px;
+}
+.deliveryAddress p span{
+    padding-left:15px;
+}
+.deliveryAddress div{
+    margin-top:13px;
+    overflow: hidden;
+}
+.deliveryAddress div img:nth-child(1){
+    padding-right:15px;
+    margin-top:10px;
+}
+.deliveryAddress div img:nth-child(3){
+
+}
+
+
+
+
+/*新增地址*/
+.importAddres{
+    margin-top:14px;
+}
+.importAddres li{
+    padding:0 20px;
+    line-height: 110px;
+    background: white;
+    border-bottom:1px solid #eee;
+    font-size: 30px;
+}
+.importAddres li input{
+    border:none;
+    background: none;
+    width: 100%;
+    height: 85px;
+    outline: none;
+    font-size: 32px;
+    color:#333;
+}
+.importAddres li input::placeholder{
+    color:#333;
+}
+.importAddres li:nth-child(3) img{
+    padding-top:42px;
+    margin-left:30px;
+}
+.importAddres li:last-child{
+    height: 221px;
+    padding-top:24px;
+}
+.importAddres li textarea{
+    width: 100%;
+    height: 100%;
+    outline: none;
+    border:none;
+    font-size: 22px;
+    color:#333;
+}
+.importAddres li textarea::placeholder{
+    color:#333;
+}
+.addressBut{
+    width: 500px;
+    height: 70px;
+    background: #e62727;
+    color:white;
+    font-size: 30px;
+    border:none;
+    display: block;
+    margin:100px auto 0;
+}
+.alertText{
+    position: fixed;
+    top:0;
+    left:0;
+    right: 0;
+    bottom:0;
+    background: rgba(0,0,0,.4);
+}
+.alertTextCont{
+    width: 540px;
+    height: 322px;
+    background-color: #ffffff;
+    border-radius: 20px;
+    position: absolute;
+    top:50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    text-align: center;
+    overflow: hidden;
+}
+.alertTextCont p{
+    font-size: 32px;
+    line-height: 32px;
+    margin-top:29px;
+    margin-bottom:64px;
+}
+.alertTextCont span{
+    font-size: 28px;
+    color:#333;
+    display: block;
+    width: 330px;
+    line-height: 1.8;
+    margin:0 auto;
+}
+.alertTextCont div{
+    width: 100%;
+    height: 100px;
+    border-top:1px solid #f0f0f0;
+    font-size: 34px;
+    color:#333;
+    position: absolute;
+    bottom:0;
+}
+.alertTextCont div i{
+    display: inline-block;
+    width: 260px;
+    height: 100px;
+    line-height: 100px;
+    border-right:1px solid #f0f0f0;
+}
+.alertTextCont div i:nth-child(2){
+    border-right:none;
+    color:#f3959d;
+}
+
+/*地址管理*/
+.adressGuan ul{
+   padding-bottom:200px;
+}
+.adressGuan li{
+    width: 710px;
+    height: 225px;
+    background-color: #ffffff;
+    margin-bottom:20px;
+    padding:0 20px;
+}
+.adressGuan li>p{
+    font-size: 32px;
+    color:#050505;
+    line-height: 32px;
+    padding-top:20px;
+}
+.adressGuan li>p span{
+    padding-left:20px;
+}
+.addressDetail{
+    overflow: hidden;
+    margin-top:13px;
+}
+.addressDetail>p{
+    width: 600px;
+    overflow: hidden;
+    color:#666;
+    font-size: 28px;
+    line-height: 42px;
+}
+.addressDetail img:nth-child(1){
+    padding-right:15px;
+    margin-top:10px;
+}
+.addressDetail img:nth-child(3){
+    margin-top:30px;
+}
+.moren{
+    font-weight: normal;
+    font-size: 24px;
+    color:#333;
+    margin-top:20px;
+}
+.moren img:nth-child(1){
+    margin-top:7px;
+    margin-right:15px;
+}
+.moren img:nth-child(4){
+    margin-top:3px;
+    margin-right:35px;
+}
+.moren img:nth-child(3){
+    margin-top:6px;
+}
+.adressGuan a{
+    display: block;
+    width: 500px;
+    height: 70px;
+    background:#e62727;
+    border-radius: 5px;
+    color:white;
+    font-size: 32px;
+    text-align: center;
+    line-height: 70px;
+    position: absolute;
+    bottom:50px;
+    left:50%;
+    margin-left:-250px;
+}
+.addressList a{
+    color:#000;
+    display:block;
+    width:100%;
+    height:100%;
+}
+.tian{
+    position:fixed;
+    bottom: 0;
+    left: 0;
+    width:100%;
+    height:200px;
+    background: #fff;
+}
+
+
+
+
+
+
+

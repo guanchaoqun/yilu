@@ -1,0 +1,121 @@
+<!--继承模板-->
+{extend name="base" /}
+<!--主体内容-->
+{block name='content'}
+<section class="content-header">
+    <h1>商品管理</h1>
+    <ol class="breadcrumb">
+        <li class="active"><i class="fa fa-dashboard"></i>商品管理</li>
+    </ol>
+</section>
+<div class="layui-content-box">
+    <div class="box">
+        <div class="box-header layui-row">
+            <div class="layui-col-xs12 layui-col-sm6 layui-col-md6">
+                <div class="input-group">
+                    <button class="layui-btn layui-btn-sm layui-btn-normal monitor-action" data-action="create">
+                        <i class="layui-icon">&#xe654;</i>新增
+                    </button>
+                    <!--<button class="layui-btn layui-btn-sm layui-btn-danger monitor-action" data-action="deleteAll">-->
+                    <!--<i class="layui-icon">&#xe640;</i>{$Think.lang.delete_all}-->
+                    <!--</button>-->
+                </div>
+
+            </div>
+            <div  class="layui-col-xs12 layui-col-sm6 layui-col-md6">
+                <!--<div class="input-group">-->
+                    <!--<input id="search" type="text" class="form-control" name="sousuo" placeholder="请输入关键词">-->
+                    <!--<span class="input-group-btn">-->
+                <!--<button class="btn btn-default" lay-event="search_btn" type="button">搜索</button>-->
+                <!--</span>-->
+                <!--</div>-->
+                <div class="demoTable" style="float:right;">
+                    <div class="layui-inline">
+                        <input class="layui-input" name="nickname" id="empno" autocomplete="off"  required lay-verify="number" placeholder="输入商品名称">
+                    </div>
+                    <button class="layui-btn" data-type="reload">搜索</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="box-body">
+            <table id="lists-table" lay-filter="lists"></table>
+            <!--作品状态-->
+            <script type="text/html" id="tb-decoration">
+                {{# if (d.decoration=="") { }}
+                <p>无</p>
+                {{# } }}
+                {{# if (d.decoration) { }}
+                <p>{{d.decoration}}</p>
+                {{# } }}
+
+            </script>
+            <!--置顶-->
+            <script type="text/html" id="tb-top">
+                {{# if (d.top==1) { }}
+                <p style="color:red;">已置顶</p>
+                {{# } }}
+                {{# if (d.top==0) { }}
+                <p>否</p>
+                {{# } }}
+
+            </script>
+            <!--封面图-->
+            <!--状态-->
+            <script type="text/html" id="tb-status">
+                {{# if (d.status==1) { }}
+                正常
+                {{# } }}
+                {{# if (d.status==9) { }}
+                <p style="color:red;">禁用</p>
+                {{# } }}
+                {{# if (d.status==8) { }}
+                删除
+                {{# } }}
+            </script>
+            <!--封面图-->
+            <script type="text/html" id="tb-image">
+                <img style="height: 40px;" src="{{d.cover_plan}}" alt="">
+            </script>
+            <!--操作-->
+            <script type="text/html" id="tb-action">
+                <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            </script>
+            <!--操作-->
+            <script type="text/html" id="tb-field">
+
+            </script>
+        </div>
+    </div>
+</div>
+
+{include file="public/javascript_index"/}
+<script type="text/javascript">
+    layui.use(['table','layer','jquery'], function(){
+        var $=table = layui.table;
+        //搜索
+        var $ = layui.$, active = {
+            reload: function(){
+                var nickname = $('#empno');
+
+                //执行重载
+                table.reload('lists-table', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                        key: {
+                            nickname: nickname.val(),
+                        }
+                    }
+                });
+            }
+        };
+        $('.box-header .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+</script>
+{/block}

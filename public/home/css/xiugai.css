@@ -1,0 +1,69 @@
+#box{
+    width:100%;
+    background:#f0f0f0;
+    font-size: 28px;
+}
+ul li{
+    margin-bottom:2px;
+    padding:0 20px;
+}
+.touxiang{
+    height:130px;
+    background:#fff;
+    line-height:130px;
+}
+.touxiang p{
+    float:left;
+}
+.touxiang span{
+    display:block;
+    float:left;
+    width:100px;
+    height:100px;
+    margin:15px 0 0 500px ;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.touxiang span img{
+    width:100px;
+    height:100px;
+    margin:0;
+}
+.touxiang img{
+    width:13px;
+    height:24px;
+    float:right;
+    margin-top: 50px;
+}
+.nicheng{
+    height:90px;
+    line-height: 90px;
+    background:#fff;
+}
+.nicheng span{
+    margin-right:30px;
+    float:right;
+    text-align:right;
+}
+.nicheng p{
+    float:left;
+}
+.nicheng img{
+    float:right;
+    margin-top:35px;
+}
+.photo{
+    /*display:none;*/
+    width:100%;
+    position:fixed;
+    bottom: 0px;
+    left: 0;
+}
+.photo li{
+    width:100%;
+    height:90px;
+    line-height:90px;
+    text-align: center;
+    background:#fff;
+    margin-top:1px;
+}

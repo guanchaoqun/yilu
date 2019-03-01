@@ -1,0 +1,122 @@
+<!--继承模板-->
+{extend name="base" /}
+<!--主体内容-->
+{block name='content'}
+<section class="content-header">
+    <h1>节点信息</h1>
+    <ol class="breadcrumb">
+        <li class="active"><i class="fa fa-dashboard"></i> 节点信息</li>
+    </ol>
+</section>
+<div class="layui-content-box">
+    <div class="panel panel-info" style="margin-bottom: 0px;">
+        <div class="panel-heading">基本参数</div>
+        <div class="panel-body">
+            <form class="layui-form layui-form-pane" action="">
+                <input type="hidden" name="id" value="{$data.id}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">父级节点</label>
+                    <div class="layui-input-block">
+                        <select name="pid" lay-verify="required">
+                            <option value="0">顶级节点</option>
+                            {foreach name="treeList" item="v"}
+                            <option value="{$v.id}" {if condition="$v.level eq '3'"}disabled="disabled"{/if} {if condition="$data.pid eq $v.id"}selected="selected"{/if} {if condition="$data.id eq $v.id"}disabled="disabled"{/if} >{eq name="v.level" value="3"}　　│　　├{/eq}{eq name="v.level" value="2"}　　├{/eq}{$v.title}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">节点名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" value="{$data.title}" required  lay-verify="required" placeholder="请输入节点名称" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">节点地址</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" value="{$data.name}" required  lay-verify="required" placeholder="请输入节点地址" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">节点类型</label>
+                    <div class="layui-input-block">
+                        <select name="level" lay-verify="required">
+                            <option value="1" {if condition="$data.level eq '1'"}selected="selected"{/if}>栏目</option>
+                            <option value="2" {if condition="$data.level eq '2'"}selected="selected"{/if}>模块</option>
+                            <option value="3" {if condition="$data.level eq '3'"}selected="selected"{/if}>操作</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-block">
+                        <select name="status" lay-verify="required">
+                            <option value="1" {if condition="$data.status eq '1'"}selected="selected"{/if}>启用</option>
+                            <option value="0" {if condition="$data.status eq '0'"}selected="selected"{/if}>停用</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">是否菜单</label>
+                    <div class="layui-input-block">
+                        <select name="ismenu" lay-verify="required">
+                            <option value="0" {if condition="$data.ismenu eq '0'"}selected="selected"{/if}>否</option>
+                            <option value="1" {if condition="$data.ismenu eq '1'"}selected="selected"{/if}>是</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">节点图标</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="icon" value="{$data.icon}" placeholder="节点图标" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">排序</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="sorts" required  lay-verify="required" placeholder="请输入排序" value="{$data.sorts|default=100}" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-submit">
+                        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="form">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="__ADMIN__/layui-v2.2.45/layui.js"></script>
+<script src="__ADMIN__/js/js.js"></script>
+<script>
+    //一般直接写在一个js文件中
+    layui.use(['form','layer','jquery'], function(){
+        var $=layui.jquery,form = layui.form,layer=layui.layer;
+        $('.panel-body').css('min-height',$(window).height()-114+"px");
+        // 新增和批量删除监听
+        form.on('submit(form)', function(data){
+            $.ajax({
+                url:"{:url($Request.action)}"
+                ,data:data.field
+                ,type:'POST'
+                ,dataType:'json'
+                ,success:function (res) {
+                    switch (res.code){
+                        case 200:
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index);
+                            parent.successMsg(res.msg);
+                            break;
+                        case 400:
+                            layer.msg(res.msg,{icon:7});
+                            break;
+                        default:
+                    }
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    });
+</script>
+{/block}

@@ -1,0 +1,142 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="Bookmark" href="/favicon.ico" >
+    <link rel="Shortcut Icon" href="/favicon.ico" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="/static/admin/lib/html5shiv.zepto"></script>
+    <script type="text/javascript" src="/static/admin/lib/respond.min.zepto"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="/static/admin/static/h-ui/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/admin/static/h-ui.admin/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="/static/admin/lib/Hui-iconfont/1.0.8/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="/static/admin/static/h-ui.admin/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="/static/admin/static/h-ui.admin/css/style.css" />
+    <!--[if IE 6]>
+    <script type="text/javascript" src="/static/admin/lib/DD_belatedPNG_0.0.8a-min.zepto" ></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>新增管理员</title>
+</head>
+<body>
+<div class="page-container">
+    <form action="" method="post" class="form form-horizontal" id="form-article-add">
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>管理员登录账户：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="4~16个字符" name="username" datatype="*4-16" nullmsg="管理员名称不能为空">
+            </div>
+            <div class="col-xs-8 col-sm-6 col-xs-offset-4 col-sm-offset-2"> </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>密码：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="password" class="input-text" value="" placeholder="6~16个字符" name="password" datatype="*6-16" nullmsg="密码不能为空">
+            </div>
+            <div class="col-xs-8 col-sm-6 col-xs-offset-4 col-sm-offset-2"> </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>确认密码：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="password" class="input-text" value="" name="password2" datatype="*" placeholder="确认密码" recheck="password" errormsg="您两次输入的账号密码不一致！" />
+            </div>
+            <div class="col-xs-8 col-sm-6 col-xs-offset-4 col-sm-offset-2"> </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>昵称：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="2~16个字符" name="nick_name" datatype="*2-16" nullmsg="昵称不能为空">
+            </div>
+            <div class="col-xs-8 col-sm-6 col-xs-offset-4 col-sm-offset-2"> </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>手机号：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" name="link_phone" datatype="m" nullmsg="请填写正确格式的手机号">
+            </div>
+            <div class="col-xs-8 col-sm-6 col-xs-offset-4 col-sm-offset-2"> </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">邮箱：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" id="email" name="email">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>是否启用：</label>
+            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                <div class="radio-box">
+                    <input name="status" type="radio" id="status-1" checked value="1">
+                    <label for="status-1">启用</label>
+                </div>
+                <div class="radio-box">
+                    <input type="radio" id="status-2" name="status" value="0">
+                    <label for="status-2">禁用</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+                <button class="btn btn-primary radius" type="submit"> 确定</button>
+                <button onClick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="/static/admin/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="/static/admin/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="/static/admin/static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="/static/admin/static/h-ui.admin/js/H-ui.admin.js"></script>
+<!--/_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="/static/admin/Validform.min.js"></script>
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript">
+    $(function() {
+        $('.skin-minimal input').iCheck({
+            checkboxClass: 'icheckbox-blue',
+            radioClass: 'iradio-yellow',
+            increaseArea: '20%'
+        });
+
+        function off() {
+//      关闭窗口刷新
+            window.parent.location.reload();
+        }
+//    表单验证
+        $("form").Validform({
+            tiptype:2,
+            beforeSubmit:function(curform){
+//        获取表单数据
+                var data=$('form').serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: "{:Url('admin/add')}",
+                    dataType: 'json',
+                    data: data,
+                    success: function (data) {
+                        if(data.code==200){
+                            setTimeout(off,600);
+                            layer.msg(data.msg,{icon: 1,time:600});
+                        }else {
+                            layer.msg(data.msg,{icon: 7,time:1300});
+                        }
+                    }
+                })
+                return false;
+            },
+        })
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<section class="sidebar "  style="overflow-x: hidden;position: relative;width: 247px;height: 100%">
+    <ul class="layui-nav layui-nav-tree" lay-filter="test" style="width: 230px;">
+        {volist name="treeMenu" id="oo"}
+        {if condition=" $oo.level eq '1' && $oo.name eq 'Welcome/index' "}
+        <li class="layui-nav-item"><a class="a-href" href="javascript:;" data-href="{:url(MODULE_NAME.'/'.$oo.name)}"><i class="fa {$oo.icon}"></i><span>{$oo.title}</span></a></li>
+        {elseif condition=" $oo.level eq '1' "/}
+        <li class="layui-nav-item">
+            <a href="javascript:;"><i class="fa {$oo.icon}"></i><span>{$oo.title}</span></a>
+            <dl class="layui-nav-child">
+                {volist name="treeMenu" id="to"}
+                {if condition=" $to.pid eq $oo.id "}
+                <dd><a class="a-href" href="javascript:;" data-href="{:url(MODULE_NAME.'/'.$to.name,$to.name_additional)}"><i class="fa {$to.icon}"></i>{$to.title}</a></dd>
+                {/if}
+                {/volist}
+            </dl>
+        </li>
+        {/if}
+        {/volist}
+        <!--<li class="layui-nav-item"><a class="a-href" href="javascript:;" data-href="{:url('@categroy')}"><i class="fa fa-home"></i><span>案例分类管理</span></a></li>-->
+        <!--<li class="layui-nav-item">-->
+            <!--<a href="javascript:;"><i class="fa fa-users"></i><span>案例管理</span></a>-->
+            <!--<dl class="layui-nav-child">-->
+                <!--<dd><a class="a-href" href="javascript:;" data-href="{:url('categroy/index')}"><i class="fa fa-user-o"></i>分类管理</a></dd>-->
+                <!--<dd><a class="a-href" href="javascript:;" data-href="{:url('tag/index')}"><i class="fa fa-tags"></i>标签管理</a></dd>-->
+                <!--<dd><a class="a-href" href="javascript:;" data-href="{:url('cases/index')}"><i class="fa fa-vcard"></i>案例信息</a></dd>-->
+                <!--<dd><a class="a-href" href="javascript:;" data-href="{:url('index/icon')}"><i class="fa layui-icon">&#xe62e;</i>图标</a></dd>-->
+            <!--</dl>-->
+        <!--</li>-->
+    </ul>
+</section>

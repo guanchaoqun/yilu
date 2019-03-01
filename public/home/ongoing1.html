@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>正在进行</title>
+    <script src="js/one.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/ongoing.css">
+    <style>
+
+    </style>
+</head>
+<body>
+<div class="ongoing" v-cloak>
+    <div class="ongoingTop" v-for="(item,index) in goodsData">
+        <p class="left" v-if="item.auctionstatus==0">即将开始</p>
+        <p class="left" v-if="item.auctionstatus==1">正在进行</p>
+        <p class="left" v-if="item.auctionstatus==2">已经结束</p>
+        <p class="left" v-if="item.auctionstatus==3">已经结束</p>
+        <p class="left" v-if="item.auctionstatus==9">已经结束</p>
+        <span class="left" v-if="item.auctionstatus==0">开始时间 {{item.start_time}}</span>
+        <span class="left" v-if="item.auctionstatus==1">距离结束 {{end_time[index]}}</span>
+        <span class="left" v-if="item.auctionstatus==2">拍卖结束</span>
+        <span class="left" v-if="item.auctionstatus==3">拍卖成交</span>
+        <span class="left" v-if="item.auctionstatus==9">拍卖结束</span>
+    </div>
+    <div class="ongoingDetail"  v-for="(item,index) in goodsData">
+        <div class="ongoingShop">
+            <img :src="item.cover_plan" alt="">
+        </div>
+        <div class="shopDetail" >
+            <h3 class="shopName">
+                <span>{{item.artisname}} <span>{{item.goods_name}}</span></span>
+                <i></i>
+            </h3>
+            <p class="currentPrice">当前价：<span>￥{{item.dangqianjia}}</span></p>
+            <p class="currentPrice">起拍价：<span>￥{{item.starting_price}}</span></p>
+            <p class="priceCourier">快递费：{{item.postage}}元</p>
+            <hr>
+            <ul>
+                <li>保证金：￥{{item.bond}}</li>
+                <li>加价幅度：<span>{{item.range_price}}</span>元</li>
+                <li>开拍时间：<span class="time">{{item.start_time}}</span></li><br>
+                <li v-if="item.auctionstatus==1">距离结束：<sapn>{{end_time[index]}}</sapn></li>
+                <li v-if="item.auctionstatus==2">结束时间：<sapn>{{item.end_time}}</sapn></li>
+            </ul>
+        </div>
+        <ul class="record" >
+            <h3>
+                <a @click="location.href = 'record.html?g_id='+item.id">
+                    出价记录
+                    <span class="offersName">{{offersName}}</span>条
+                    <img src="img/rightJian.png" alt="" class="right">
+                </a>
+            </h3>
+            <li v-for="(item,index) in offersList" v-if='index<=2'>
+                <span class="left">{{item.nickname}}</span>
+                <i class="left"v-if="item.offerstatus>0">领先</i>
+                <i class="left" v-if="item.offerstatus<1">出局</i>
+                <p class="left">{{item.create_time}}</p>
+                <b class="right">￥{{item.price}}</b>
+            </li>
+        </ul>
+        <div class="shopHome">
+            <a href="#" @click="location.href = 'focusStore.html?id='+item.sp_id">
+                <div class="shopHomeTou left">
+                    <img :src="item.shopimage" alt="">
+                </div>
+                <p class="left">{{item.shopname}}</p>
+                <img src="img/rightJian.png" class="right shopName" alt="">
+            </a>
+        </div>
+        <ul class="shopIntroduce">
+                <li>作品来源：{{item.classname}}</li>
+                <li>作品作者：{{item.artisname}}</li>
+                <li>作品名称：{{item.goods_name}}</li>
+                <li>作品年代：{{item.decade}}</li>
+                <li>作品状态：{{item.decoration}}</li>
+                <li>作品尺寸：{{item.size}}</li>
+                <li>作品类别：</li>
+                <li>其他说明:</li>
+            </ul>
+            <div class="showImg">
+                <p>拍品展示</p>
+                <div v-html="item.particulars">{{item.particulars}}</div>
+                <!--<img :src="item.particulars" alt="">-->
+            </div>
+    </div>
+    <!----><div class="ongoingBot" v-for="(item,index) in goodsData" v-if="item.bondstatus==0">
+        <div class="ongoingBotLeft left">
+            <p>保证金： ￥{{item.bond}}</p>
+            <span>（未拍到全额退还）</span>
+        </div>
+        <a @click="location.href = 'delivery.html?id='+item.id" class="jiaona left">
+            交保证金报名
+        </a>
+    </div>
+    <div class="ongoingBot" v-for="(item,index) in goodsData" v-if="item.auctionstatus==2">
+        <div class="jieshu left witting">
+            <p>拍卖已结束</p>
+        </div>
+    </div>
+    <div class="ongoingBot" v-for="(item,index) in goodsData" v-if="item.auctionstatus==3">
+        <div class="jieshu left witting">
+            <p>拍卖成交</p>
+        </div>
+    </div>
+    <div class="ongoingBot" v-for="(item,index) in goodsData" v-if="item.auctionstatus==9">
+        <div class="jieshu left witting">
+            <p>流拍</p>
+        </div>
+    </div>
+    <div class="chujia" v-for="(item,index) in goodsData" v-if="item.bondstatus==1&&item.auctionstatus==1">
+        <div class="price left">
+            <div>
+                <button id="jian" class="left" @click="jian(item)">-</button>
+                <textarea class="left jia" v-model="jia" onkeyup="this.value=this.value.replace(/[^\d]/g,'')">{{item.starting_price}}</textarea>
+                <!--<input type="text" id="shu" :value="jia" class="left jia" name="jia">-->
+                <button class="left" id="jia" @click="jianum(item)">+</button>
+            </div>
+        </div>
+        <a class="jiaona left" @click="chujia(item)">
+            出价
+        </a>
+    </div>
+    <div  class="ongoingBot" v-for="(item,index) in goodsData" v-if="item.bondstatus==1&&item.auctionstatus==0">
+        <div class="jieshu left witting">
+            <p>等待开始</p>
+        </div>
+    </div>
+</div>
+<script src="js/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script>
+    function timeFn(d1) {
+        var dateBegin = new Date(d1.replace(/-/g, "/"));//将-转化为/，使用new Date
+        var dateEnd = new Date();//获取当前时间
+        var dateDiff = dateEnd.getTime() - dateBegin.getTime();//时间差的毫秒数
+        if(dateDiff>0){
+            dateDiff=0;
+        }
+        var dayDiff = Math.floor(dateDiff / (24 * 3600 * 1000));//计算出相差天数
+        var leave1=dateDiff%(24*3600*1000);    //计算天数后剩余的毫秒数
+        var hours=Math.floor(leave1/(3600*1000));//计算出小时数
+        //计算相差分钟数
+        var leave2=leave1%(3600*1000);    //计算小时数后剩余的毫秒数
+        var minutes=Math.floor(leave2/(60*1000));//计算相差分钟数
+        //计算相差秒数
+        var leave3=leave2%(60*1000);      //计算分钟数后剩余的毫秒数
+        var seconds=Math.floor(leave3/1000);
+        // console.log(dateDiff)
+
+        return Math.abs(dayDiff+1) + '天' + Math.abs(hours+1) + '小时' + Math.abs(minutes+1) + '分'+Math.abs(seconds) + '秒';
+    }
+    function getJsonLength(jsonData){
+        var jsonLength = 0;
+        for(var item in jsonData){
+            jsonLength++;
+        }
+        return jsonLength;
+    }
+    var vm = new Vue({
+        el:".ongoing",
+        data:{
+            goodsData:'',
+            offersList:'',
+            jia:'',
+            // data:'<p style="background:#000;height:100px;"></p>',
+            end_time:[],
+            offersName:'',
+        },
+        methods:{
+            goods:function(){
+                var _this = this;
+                var newsID=window.location.search;
+                axios.get("/api/details/index"+newsID).then(function(res){
+                    _this.goodsData = res.data.data;
+                    var data=_this.goodsData.dangqianjia;
+                    // console.log(data);
+                    // console.log(_this.goodsData[0].dangqianjia);
+                    _this.jia=_this.goodsData[0].chujia;
+                    setInterval(function(){
+                        _this.end_time = [];
+                        // console.log(_this.end_time)
+                        for(var i = 0;i<_this.goodsData.length;i++){
+                            _this.end_time.push(timeFn(_this.goodsData[i].end_time));
+                        }
+                    });
+                }).catch(function(){
+                    console.log('没有')
+                })
+            },
+            offers:function(){
+                var _this=this;
+                var newsID=window.location.search;
+                axios.get("/api/details/offer"+newsID).then(function(res){
+                    _this.offersList = res.data.data;
+                    _this.offersName = res.data.data.length;
+                    _this.offerstatus = res.data.data.offerstatus
+                    // console.log(res);
+                    // console.log(item.id)
+                    // $(".offersName").append(_this.offersName);
+                }).catch(function(){
+                    console.log('没有')
+                })
+            },
+            jian:function(item){
+                var jian=parseInt(item.range_price);
+                // var zhi=parseInt(document.getElementById("shu").value);
+                if(this.jia>0){
+                    this.jia-=jian;
+                    // console.log(zhi)
+                }else{
+                    alert("不可以小于0");
+                }
+            },
+            jianum:function(item){
+                var jian=parseInt(item.range_price);
+                // var zhi=parseInt(document.getElementById("shu").value);
+                this.jia-=-jian;
+                // console.log(zhi)
+            },
+            chujia:function(item){
+                var _this = this;
+                var newsID=window.location.search;
+                    axios.post("/api/goods_offer/buy",{
+                        id:item.id,
+                        jia:_this.jia
+                    }).then(function(res){
+                        console.log(res.data)
+                        axios.get("/api/details/offer"+newsID).then(function(res){
+                            _this.offersList = res.data.data;
+                            _this.offersName = res.data.data.length;
+                            _this.offerstatus = res.data.data.offerstatus
+                            // console.log(_this.offersList);
+                            // $(".offersName").append(_this.offersName);
+                        })
+                        axios.get("/api/details/index"+newsID).then(function(res){
+                            _this.goodsData = res.data.data;
+                            var data=res.data.data.particulars;
+                            // console.log(data);
+                            // console.log(res);
+                            setInterval(function(){
+                                _this.end_time = [];
+                                for(var i = 0;i<_this.goodsData.length;i++){
+                                    _this.end_time.push(timeFn(_this.goodsData[i].end_time));
+                                }
+                            });
+                        })
+                        alert(res.data.message)
+                    }).catch(function(){
+                        console.log("cuo")
+                    })
+
+            }
+        },
+        mounted:function(){
+            this.goods();
+            this.offers();
+        }
+    })
+</script>
+</body>
+</html>

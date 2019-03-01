@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>{$Think.lang.admin_title}</title>
+    <link rel="stylesheet" href="__ADMIN__/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__ADMIN__/bootstrap/css/font-awesome.min.css">
+    <link rel="stylesheet" href="__ADMIN__/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="__PUBLIC__/lib/layui-v2.2.45/css/layui.css">
+    <link rel="stylesheet" href="__ADMIN__/css/style.css">
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.js">
+    </script>
+
+</head>
+<body class="skin-blue fixed sidebar-mini">
+<div class="wrapper">
+    <!--头部-->
+    <header class="main-header">
+        {block name="admin_top"}{include file="public/header" /}{/block}
+    </header>
+    <!--左边菜单-->
+    <aside class="main-sidebar" style="overflow-x: hidden;height: 100%;">
+        {block name="admin_left"}{include file="public/left_menu" /}{/block}
+    </aside>
+    <!--内容区域-->
+    <div class="content-wrapper" style="overflow: hidden;position: relative">
+        <div class="loding" style="display: none">
+            <i class="layui-icon layui-anim loding-rotate layui-anim-loop">&#xe63d;</i>
+            加载中.....
+        </div>
+        <iframe class="iframe" src="{:url('index/content')}" frameborder="0" style="width: 100%;height: 100%;"></iframe>
+    </div>
+</div>
+<script src="__PUBLIC__/lib/layui-v2.2.45/layui.js"></script>
+<script type="text/javascript">
+
+
+        // 你可以在这里继续使用$作为别名...\
+        function clock()
+        {
+            $.ajax({
+                url:"/webcontroller/orders/tixing",
+                dataType:'json',
+                success:function(res){
+                    var res=res.data;
+
+                    $(".layui-badge").html(res)
+
+                }
+            });
+        }
+        var int=self.setInterval("clock()",60000);
+
+    //JavaScript代码区域
+    layui.use(['element','jquery','layer'], function(){
+        var $=layui.jquery,layer=layui.layer;
+        $('.a-href').on('click',function () {
+            $('.loding').show();
+            $('.iframe').attr('src',$(this).data('href'));
+            $('.iframe').load(function () {
+                $('.loding').hide();
+            })
+        });
+        $('.iframe').load(function () {
+            $('.loding').hide();
+        });
+        // 内容盒子大小
+        $('.content-wrapper').css({'height':$(window).height() + 'px'});
+        $('.loding').css({'height':$(window).height() + 'px'});
+        // 菜单栏显示和影藏效果
+        var a=1,a1=1;
+        $('.sidebar-toggle').click(function () {
+            var win_width=$(window).width();
+            if(a==1 && win_width >= 768){
+                a=2;
+                $('body').addClass('sidebar-collapse');
+            }else if(a1==1 && win_width < 768){
+                a1=2;
+                $('body').addClass('sidebar-open');
+            }else if(a1==2 && win_width < 768){
+                a1=1;
+                $('body').removeClass('sidebar-open');
+            }else {
+                a=1;
+                $('body').removeClass('sidebar-collapse');
+            }
+        });
+        // 菜单hover效果
+        $('.main-sidebar').hover(function () {
+            if(a==2 && $(window).width()>=768){
+                $('body').addClass('sidebar-collapse-on-hover').removeClass('sidebar-collapse');
+            }
+        },function () {
+            if(a==2 && $(window).width()>=768){
+                $('body').removeClass('sidebar-collapse-on-hover').addClass('sidebar-collapse');
+            }
+        });
+        // 清除缓存
+        $('.clean-cache').click(function () {
+            $.ajax({
+                url:"{:url('index/cleancache')}",
+                type:'POST',
+                dataType:'json',
+                success:function (data) {
+                    if(data.code==200){
+                        layer.msg('缓存清除成功！',{icon: 1,time:2000});
+                    }else {
+                        layer.msg(data.message,{icon: 7,time:2000});
+                    }
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

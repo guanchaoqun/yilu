@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>添加地址</title>
+    <script src="js/one.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/addressList.css">
+</head>
+<body>
+    <div class="box">
+        <ul class="address">
+            <li v-for="(item,index) in addressList" ><a @click="location.replace ( 'addressShi.html?area_id='+item.area_id + '&addressOne=' + item.name)"><span>{{item.name}}</span><img src="img/rightJian.png"></a></li>
+        </ul>
+    </div>
+    <script src="js/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        new Vue({
+            el:'.box',
+            data:{
+                addressList:'',
+            },
+            methods:{
+                address:function(){
+                    var _this=this;
+                    axios.get("/api/address/sheng").then(function(res){
+                        _this.addressList = res.data.data;
+                        console.log(res);
+                    }).catch(function(){
+                        console.log('没有')
+                    })
+                }
+            },
+            mounted:function(){
+                this.address();
+            }
+        })
+    </script>
+</body>
+</html>

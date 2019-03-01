@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <title>地址管理</title>
+    <script src="/home/js/one.js"></script>
+    <link rel="stylesheet" href="/home/css/style.css">
+    <link rel="stylesheet" href="/home/css/delivery.css">
+</head>
+<body class="bodyBack">
+<div class="adressGuan">
+    <ul>
+        <li v-for="(item,index) in addressList">
+            <p>{{item.name}} <span>{{item.phone}}</span></p>
+            <div class="addressDetail">
+                <img src="/home/img/adress.png" alt="" class="left">
+                <p class="left">
+                    {{item.area}}{{item.address}}
+                </p>
+            </div>
+            <h4 class="moren">
+                <img src="/home/img/adressCheck.png" alt="" class="left" v-if="item.state==1">
+                <img src="/home/img/adressNo.png" alt="" class="left" v-if="item.state==0">
+                <span class="left" @click="moren(item)">设为默认</span>
+                <img src="/home/img/adressDelete.png" alt="" class="right" @click="remove(item)">
+                <img src="/home/img/adressBian.png" alt="" class="right" @click="location.replace('xiugaiAddress?id='+item.id)">
+            </h4>
+        </li>
+    </ul>
+    <div class="tian" ><a @click="location.href='newAddress'">添加新地址</a></div>
+    <div class="alertText" v-show="deleteAddress">
+        <div class="alertTextCont">
+            <p>提示</p>
+            <span>确认删除该地址吗？</span>
+            <div>
+                <i @click="deleteAddress = false">取消</i>
+                <i @click="location.href='addressManag'">确认</i>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/home/js/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+    new Vue({
+        el:'.adressGuan',
+        data:{
+            deleteAddress:false,
+            addressList:'',
+            addressId:''
+        },
+        methods:{
+            address:function(){
+                var _this=this;
+                axios.get("/api/address/address_list").then(function(res){
+                    _this.addressList = res.data.data;
+                    console.log(res);
+                }).catch(function(){
+                    console.log('没有')
+                })
+            },
+            remove:function(item){
+                this.deleteAddress = true;
+                axios.get("/api/address/address_del?id="+item.id).then(function(res){
+                    console.log(res)
+                }).catch(function(){
+                    console.log('没有')
+                    console.log(index)
+                })
+            },
+            moren:function(item){
+                axios.get("/api/address/address_default?id="+item.id).then(function(res){
+                    // console.log(item.id);
+                    window.location.reload();
+                    // console.log(item.id);
+                }).catch(function(){
+                    console.log('没有')
+                })
+            }
+        },
+        mounted:function(){
+            this.address();
+        }
+    })
+</script>
+</body>
+</html>
